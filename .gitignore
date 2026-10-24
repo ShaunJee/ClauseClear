@@ -18,6 +18,7 @@ voice_recs/
 # Temporary and Debug Documentation Bundles
 CLAUSECLEAR_AUDIT_DEBUG_BUNDLE.md
 CLAUSECLEAR_UI_BUNDLE.md
+CLAUSECLEAR_FULL_SUBMISSION_AND_SOURCE.md
 normalize-html.py
 
 # Environment Variables and Credentials
