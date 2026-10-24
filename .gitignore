@@ -11,6 +11,10 @@ out/
 # Hackathon Starter Instructions Folder (Excluded as requested)
 start/
 
+# Local Helpers and Teleprompter Studio (Excluded from git)
+helpers/
+voice_recs/
+
 # Temporary and Debug Documentation Bundles
 CLAUSECLEAR_AUDIT_DEBUG_BUNDLE.md
 CLAUSECLEAR_UI_BUNDLE.md

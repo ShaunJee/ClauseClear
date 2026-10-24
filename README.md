@@ -1,162 +1,229 @@
-# ClauseClear
+<div align="center">
 
-### AI Contract Auditing and Financial Transparency Engine for Students and First-Time Renters
-*Built for NextSpark Hacks 2026: Addressing predatory housing leases, unpaid internship traps, and hidden junk fees.*
+# 🛡️ ClauseClear
 
----
+### **The Open-Source AI Contract Auditing & Financial Transparency Engine for Students & First-Time Renters**
 
-## Executive Summary and Value Proposition
+*“Read the fine print before it reads you.”*
 
-Every year, millions of university students, young graduates, and first-time renters sign legally binding 15-page contracts without understanding the fine print. Landlords and predatory corporations exploit this lack of experience by burying hazardous legal traps:
-- **Unannounced Entry:** Clauses permitting landlords or maintenance teams to enter student apartments at any hour without prior notice.
-- **Buried Monthly Junk Fees:** Doorstep trash valet ($35/mo), digital portal convenience fees ($45/mo), and administrative charges ($25/mo) adding **+$1,260/year** or more over advertised rent.
-- **Mandatory Repair Deductibles:** Forcing tenants to pay the first $350 of plumbing or appliance repairs regardless of fault.
-- **Intellectual Property Seizure:** Unpaid summer internship agreements that claim complete ownership over personal student projects, capstone hackathon code, and coursework.
-- **Deceptive Auto-Renewals:** 60-day certified-mail cancellation windows that trap members into recurring annual billing.
-
-**ClauseClear** transforms opaque contracts into clear, quantified, and actionable leverage in seconds. It scores agreements from 0 to 100, unbundles buried fees, highlights exact verbatim quotes, and drafts attorney-grade counter-offers and binding Addendum Riders.
+Built with passion for **NextSpark Hacks 2026** 🏆
 
 ---
 
-## Core Product Capabilities and Selling Points
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-shaunjee.github.io%2FClauseClear-8B5CF6?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
+[![Watch Demo Video](https://img.shields.io/badge/🎬_3--Min_Demo-Watch_1080p_MP4-E11D48?style=for-the-badge)](./ClauseClear_Demo.mp4)
+[![Hackathon](https://img.shields.io/badge/🏆_NextSpark_Hacks-2026_Entry-F59E0B?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
+[![Next.js 14](https://img.shields.io/badge/Next.js-14_Static_Export-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-Strict_Type_Safe-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
+[![Offline Capable](https://img.shields.io/badge/Offline_NLP-25--Rule_Engine-10B981?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
+[![Privacy First](https://img.shields.io/badge/Privacy-100%25_In--Memory_Zero_Storage-14B8A6?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-FACC15?style=for-the-badge&logo=opensourceinitiative&logoColor=black)](./LICENSE)
 
-### 1. Zero-Setup 1-Click Judge Mode Presets
-Explore pre-computed, realistic benchmark contracts with zero login walls, zero onboarding, and zero API key requirements:
-- **University Off-Campus Apartment Lease:** Advertised at $2,000/month; reveals $6,750 in upfront deposits and buried charges, habitability waivers, and unannounced entry.
-- **Tech Startup Summer Internship Agreement:** Uncovers aggressive claims over personal student hackathon repositories and a 2-year non-compete covenant.
-- **Metro Iron Gym Membership Agreement:** Uncovers hidden $89 annual facility maintenance charges and a certified-mail cancellation trap.
+<br />
 
-### 2. Hybrid Dual-Engine Architecture (Online + Offline)
-- **Live Google Gemini Reasoning:** Deep contextual legal reasoning and customized negotiation letters powered by Google Gemini.
-- **Local Heuristic NLP Engine:** 100% client-side, deterministic pattern extractor that parses custom pasted text offline with zero API key requirement and zero data retention.
+**[🌐 Try the Live Website](https://shaunjee.github.io/ClauseClear/)** • **[🎬 Watch Demo Video](./ClauseClear_Demo.mp4)** • **[⚡ 1-Click Judge Presets](#-zero-setup-1-click-judge-presets)** • **[🏗️ Tri-Engine Architecture](#️-resilient-tri-engine-architecture)** • **[🚀 Quickstart](#-quickstart--local-development)**
 
-### 3. Interactive Fairness Score (0 to 100)
-- **Dynamic Circular Progress Ring:** Color-coded gradient progress ring (Emerald Green 80+, Amber Warning 50-79, Rose Red <50) with animated cubic ease-out count-up.
-- **Mathematical Risk Rubric:** Base score of 100 with explicit deductions:
-  - `-18 points` for critical legal violations (e.g., habitability waivers, unannounced entry).
-  - `-8 points` for one-sided moderate warnings (e.g., disproportionate repair deductibles).
-  - `-4 points` per omitted statutory tenant protection.
-- **Untruncated Executive Summaries:** Clear explanations without ellipsis truncation, giving users a complete overview of risks.
+<br />
 
-### 4. Verbatim Document Viewer with Bi-Directional Highlighting
-- **Exact Quote Matching:** Verbatim contract phrases are highlighted directly on paper-styled text.
-- **Bi-Directional Navigation:** Clicking any flagged clause card scrolls the document directly to the exact quote with a pulse animation; clicking any highlighted text in the document scrolls to its corresponding analysis card.
-- **Toolbar Controls:** Compact font size toggles ([A-] [A] [A+]) for customizable reading comfort without layout overflow.
+<!-- Hero Poster -->
+<a href="https://shaunjee.github.io/ClauseClear/">
+  <img src="Poster.png" alt="ClauseClear Poster Banner - Read the fine print before it reads you" width="100%" style="border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);" />
+</a>
 
-### 5. "True Cost" Financial Liability Simulator
-- **Unbundled Monthly Accounting:** Separates base advertised rent from mandatory recurring add-ons.
-- **Upfront vs Recurring Distinction:** Correctly categorizes one-time move-in fees and security deposits versus hidden monthly surcharges.
-- **Student Grocery Conversion:** Translates annual hidden surcharges into relatable student benchmarks (e.g., "Equivalent to 112 weeks of student groceries").
-- **12-Month Financial Liability Comparison:** Visual side-by-side progress bar comparing advertised commitments against true out-of-pocket liabilities.
+<p align="center">
+  <em>👆 Click the poster above to test the live application directly in your browser with zero setup.</em>
+</p>
 
-### 6. 1-Click Attorney-Grade Counter-Offer Drafter
-- **Multi-Tone Negotiation Selector:**
-  - *Collaborative (Recommended):* Polite, respectful student tone framing adjustments as mutual clarifications.
-  - *Firm:* Direct, assertive commercial tone requesting standard balanced terms.
-  - *Legal Standard:* Formal statutory tone citing tenant rights and bilateral fairness.
-- **Proper Paragraph Formatting:** Automatically generates clean emails with double newlines separating salutations, numbered negotiation points, and sign-offs.
-- **Binding Schedule of Amendments (Rider A):** Formats a signable contractual addendum with formal superseded language, replacement terms, and signature lines.
-- **Frictionless Sharing:** One-click copy with confetti feedback and instant `mailto:` launching in the user's default email client.
-
-### 7. Zero-Server Static Export (GitHub Pages Ready)
-- Built with Next.js static export (`output: 'export'`), compiling the complete React, Zustand, and Tailwind application into pure static HTML, CSS, and JS inside the `out/` directory.
-- Can be deployed to GitHub Pages or any static CDN with zero Node.js server dependencies.
+</div>
 
 ---
 
-## Technical Stack and Architecture
+## 🎬 3-Minute Demo Video Walkthrough
 
-| Layer | Technology | Purpose |
-|---|---|---|
-| **Framework** | Next.js 14 (App Router, Static Export) | Single-page application architecture |
-| **Language** | TypeScript | Strict type safety for contract schemas and scoring rubrics |
-| **Styling** | Tailwind CSS + Vanilla CSS Tokens | Glassmorphism, aurora backdrops, and dark mode support |
-| **State Management** | Zustand (`persist` middleware) | Reactive client-side store with `localStorage` persistence |
-| **AI Integration** | Google Gemini API + Vercel AI SDK | Generative legal analysis and negotiation synthesis |
-| **Validation** | Zod | Runtime schema validation for contract extraction |
-| **UI Components** | Lucide React Icons, Canvas-Confetti | Modern interactive iconography and micro-animations |
+Watch the complete, uncensored **3-minute walkthrough** demonstrating ClauseClear in action—from instant preset audit to bi-directional sync, True Cost financial simulation, and 1-click binding legal rider generation:
+
+<div align="center">
+
+<video src="ClauseClear_Demo.mp4" controls="controls" width="100%" poster="Poster.png">
+  Your browser does not support the video tag. You can view or download the video directly via the link below.
+</video>
+
+<p align="center">
+  ▶️ <strong><a href="ClauseClear_Demo.mp4">Click here to download or watch ClauseClear_Demo.mp4 (Full 1080p 60fps)</a></strong>
+</p>
+
+</div>
 
 ---
 
-## Project Structure
+## 💡 The Problem: The Student Trap
 
-```text
-ClauseClear/
-├── src/
-│   ├── app/
-│   │   ├── page.tsx                     # Main application view with landing and audit workspace
-│   │   ├── layout.tsx                   # Root HTML shell with font definitions and metadata
-│   │   └── api/
-│   │       ├── analyze/route.ts         # Server-side Gemini contract auditing endpoint
-│   │       └── negotiate/route.ts       # Server-side counter-offer drafting endpoint
-│   ├── components/
-│   │   ├── upload-zone.tsx              # Contract text input, preset loader, and audit engine
-│   │   ├── audit-loading-modal.tsx      # Multi-step progress modal with live elapsed timer
-│   │   ├── api-key-modal.tsx            # In-browser Gemini API key configuration
-│   │   └── dashboard/
-│   │       ├── audit-workspace.tsx      # Central audit dashboard coordinator
-│   │       ├── score-header.tsx         # Score circle with count-up animation and fee banner
-│   │       ├── document-viewer.tsx      # Highlighted contract viewer with font controls
-│   │       ├── clause-card.tsx          # Risk cards with plain-English breakdowns
-│   │       ├── true-cost-card.tsx       # Unbundled financial surcharge calculator
-│   │       └── negotiation-drawer.tsx   # Counter-offer email and Rider A generator
-│   ├── lib/
-│   │   ├── schema.ts                    # Zod schemas for clauses, risks, and financial items
-│   │   ├── scoring.ts                   # Deterministic 0-100 risk scoring algorithm
-│   │   ├── sample-contracts.ts          # Benchmark contracts (Lease, Internship, Gym)
-│   │   ├── heuristic-analyzer.ts        # Client-side offline regex and NLP heuristic engine
-│   │   └── negotiation-generator.ts     # Offline deterministic counter-offer builder
-│   └── store/
-│       └── use-audit-store.ts           # Central Zustand store for document and audit state
-├── out/                                 # Pure static HTML/CSS/JS export for GitHub Pages
-├── next.config.mjs                      # Static export configuration
-├── tailwind.config.ts                   # Tailored palette and typography configuration
-└── package.json                         # Project dependencies and build scripts
+Every semester, **millions of university students, young graduates, and first-time renters** sign 15-page legal agreements without understanding the fine print. Landlords and predatory corporations deliberately bury extreme legal traps:
+
+* 🚪 **Unannounced 3:00 AM Entry:** Landlords claiming unrestricted rights to walk into apartments without prior notice.
+* 💸 **Buried Monthly Junk Fees:** Mandatory doorstep trash valet ($35/mo), digital portal convenience fees ($45/mo), and pest fees ($25/mo) adding **+$1,260 to +$1,610/year** on top of advertised rent.
+* 🔧 **Burdensome Repair Deductibles:** Forcing student tenants to pay the first $350 of plumbing or appliance repairs regardless of causation or normal wear-and-tear.
+* 💻 **IP Seizure in "Unpaid Internships":** Accelerator and internship agreements seizing full ownership over students' personal side-projects, hackathon repos, and university capstones.
+* 🔄 **90-Day Certified Mail Renewal Traps:** Obscure clauses locking students into another full year with automatic 15% rent spikes.
+
+### Why Existing Solutions Fail
+
+| Solution | Cost | Speed | Privacy | Actionable Leverage |
+| :--- | :---: | :---: | :---: | :---: |
+| **Tenant Attorneys** | $300 – $500 / hr | 3–7 business days | High | High (but unaffordable for students) |
+| **Generic Chatbots (ChatGPT)** | Free / $20 / mo | ~15 seconds | ❌ Data used for training | ❌ Vague summaries, misses buried fee math, hallucinated citations |
+| **🛡️ ClauseClear** | **100% Free** | **Instant (< 1s)** | **🔒 100% In-Memory / Zero Data Retained** | **✅ Mathematical 0-100 Score, Exact Verbatim Highlights, Grocery Conversion & Binding Rider A** |
+
+---
+
+## ⚡ Key Product Capabilities
+
+### 1. 🎯 Deterministic Fairness Score (0 to 100)
+ClauseClear rejects fuzzy, inconsistent AI scoring in favor of a **deterministic mathematical rubric**:
+* **Base 100 points** with explicit deductions:
+  * `-18 points` per critical legal violation (illegal entry, habitability waivers, IP seizure).
+  * `-8 points` per moderate one-sided warning (repair deductibles, guest fines, late fee spikes).
+  * `-4 points` per omitted statutory tenant protection.
+* Animated cubic ease-out circular score gauge with dynamic color tokens (Rose Crimson `< 45`, Amber Caution `45–79`, Emerald Balanced `80+`).
+
+### 2. 📑 Synchronized Split-Pane Bi-Directional Viewer
+* **Verbatim Source Span Linking:** Every red flag links directly to the exact verbatim quote in the contract text.
+* **Bi-Directional Interaction:**
+  * Clicking **"Locate"** on any clause card auto-scrolls the contract and pulses the highlight.
+  * Clicking any colored highlight in the contract auto-expands the corresponding card with **Plain-English Translation**, **Worst-Case Scenario**, and **Fairer Wording**.
+* **Missing Protections Tab:** Identifies essential clauses omitted by the counterparty (e.g., 24-hour notice of entry, 21-day deposit return deadline, habitability rent abatement).
+
+### 3. 💰 "True Cost" Financial Liability Simulator
+* **Unbundled Transparency:** Separates advertised base rent from mandatory recurring junk fees (smart locks, valet trash, portal fees) and one-time move-in fees.
+* **Student Grocery Conversion:** Translates annual hidden markups into concrete student metrics (e.g., *"$1,610 in hidden fees = 27 weeks of groceries"*).
+* **Interactive "What If...?" Stress-Testing:** Toggle conditional traps (e.g., a $350 plumbing deductible or a $75 immediate late fee) to watch the 12-month liability bar dynamically expand in real time.
+
+### 4. ✍️ 1-Click Attorney-Grade Counter-Offer Drafter & Rider A
+* **Three Negotiation Tones:**
+  * 🤝 **Collaborative (Recommended):** Friendly, respectful student tone framing adjustments as simple mutual clarifications.
+  * ⚖️ **Firm:** Direct, assertive commercial tone requesting standard two-way commercial terms.
+  * 📜 **Legal:** Formal statutory tone citing consumer-protection laws and municipal tenant codes.
+* **Binding Schedule of Amendments (RIDER A):** Because emails aren't legally binding, ClauseClear automatically generates a formal contractual amendment addendum with superseded quotes, clean replacement terms, and signature blocks.
+* **Celebratory Confetti:** One-click copy with instant confetti animation and pre-formatted `mailto:` email launch.
+
+---
+
+## 🏗️ Resilient Tri-Engine Architecture
+
+ClauseClear is built around a **fail-safe Tri-Engine design** ensuring that contract audits succeed under any network condition, rate limit, or environment:
+
+```mermaid
+flowchart TD
+    A[Contract Input / Preset] --> B[Text Normalization Engine]
+    B --> C{Engine Router}
+    
+    C -->|Server Available| D[Engine 1: Next.js API + Google Gemini 3.5 Flash]
+    C -->|Client API Key Set| E[Engine 2: Browser-Direct Gemini REST SDK]
+    C -->|Offline / Zero Key / Rate Limit| F[Engine 3: 25-Rule Deterministic Heuristic NLP]
+    
+    D --> G[Zod Schema Validation & Sanitizer]
+    E --> G
+    F --> G
+    
+    G --> H[Deterministic Scoring Engine]
+    H --> I[True Cost Financial Calculator]
+    I --> J[Synchronized Split-Pane Workspace]
+    J --> K[1-Click Counter-Offer & Rider A Drafter]
+```
+
+1. **Engine 1 (Server Gemini):** High-throughput server-side route powered by the Google Gemini API with structured JSON output and strict Zod validation.
+2. **Engine 2 (Browser-Direct Gemini):** Client-side REST caller that communicates directly with Google Gemini using the user's custom API key (ideal for static deployments like GitHub Pages).
+3. **Engine 3 (Local Heuristic NLP):** 100% offline, zero-latency regex & symbolic parser incorporating 25 legal pattern rules. Works with zero internet connection, zero API key, and 0ms latency.
+
+---
+
+## ⚡ Zero-Setup 1-Click Judge Presets
+
+Judges can test ClauseClear instantly on the **[Live Demo Website](https://shaunjee.github.io/ClauseClear/)** with three pre-loaded real-world contracts:
+
+```
+┌─────────────────────────────────┬─────────────────────────────────┬─────────────────────────────────┐
+│ 🏠 Oakwood Student Commons      │ 💼 NextGen Tech Contributor     │ 🏋️ Apex Fitness 24-Mo Club      │
+├─────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────┤
+│ • Advertised: $950 / mo         │ • Unpaid 35-hr/week commitment  │ • Advertised: $39 / mo          │
+│ • Actual: $1,055 / mo           │ • Seizes personal hackathons    │ • $89 annual facility fee       │
+│ • 3:00 AM unannounced entry     │ • 2-year non-compete covenant   │ • 60-day certified mail cancel  │
+│ • Score: 5 / 100 (Predatory)    │ • Score: 18 / 100 (High Risk)   │ • Score: 32 / 100 (Burdensome)  │
+└─────────────────────────────────┴─────────────────────────────────┴─────────────────────────────────┘
 ```
 
 ---
 
-## Getting Started
+## 🛠️ Tech Stack
+
+| Layer | Technology | Key Highlights |
+| :--- | :--- | :--- |
+| **Frontend Framework** | **Next.js 14** (App Router) | Static export (`output: 'export'`), sub-second page loads |
+| **Language** | **TypeScript 5.0+** | Strict types across schema, scoring, and store slices |
+| **Styling & Design System** | **Tailwind CSS + Vanilla CSS Tokens** | Glassmorphism, aurora backdrops, dark/light mode toggle |
+| **AI & LLM Reasoning** | **Google Gemini 3.5 Flash** | Contextual legal analysis, fee unbundling, negotiation letters |
+| **Offline Engine** | **Symbolic Regex NLP** | 25 deterministic pattern heuristics, zero network overhead |
+| **State Management** | **Zustand** (with `persist` middleware) | In-memory reactive store, cross-tab synchronization |
+| **Validation** | **Zod** | Runtime schema safety for extracted clauses and financial items |
+| **Iconography & Polish** | **Lucide Icons & Canvas-Confetti** | Micro-animations, responsive layout, confetti triggers |
+
+---
+
+## 🚀 Quickstart & Local Development
 
 ### Prerequisites
-- Node.js 18.17 or later
+- Node.js 18.17+
 - npm or pnpm
 
-### 1. Installation
+### 1. Clone & Install
 ```bash
-git clone https://github.com/your-username/clauseclear.git
-cd clauseclear
+git clone https://github.com/shaunjee/ClauseClear.git
+cd ClauseClear
 npm install
 ```
 
-### 2. Running in Development Mode
+### 2. Launch Local Development Server
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+Open **[http://localhost:3000](http://localhost:3000)** in your browser. ClauseClear works immediately with all sample presets and the offline heuristic engine!
 
-ClauseClear works completely out of the box using its built-in Local Heuristic NLP Engine and pre-computed benchmark presets.
+### 3. Add Google Gemini API Key (Optional)
+To test live AI synthesis on arbitrary custom contracts:
+* Click the **Gemini AI / Offline Mode** button in the navbar.
+* Paste your Google Gemini API key (stored purely in your local browser `localStorage`).
+* *Or* add it to `.env.local`:
+  ```env
+  GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-api-key"
+  ```
 
-### 3. Enabling Live Google Gemini AI (Optional)
-To use live Google Gemini AI reasoning:
-1. Click the **Gemini AI** button in the top navigation bar.
-2. Enter your Google AI Studio Gemini API key.
-3. The key is stored locally in your browser (`localStorage`) and used for direct requests.
-
-Alternatively, you can provide an environment variable in a `.env.local` file:
-```bash
-GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-api-key"
-```
-
-### 4. Building for Static Hosting (GitHub Pages)
-To compile the TypeScript application into pure static HTML, CSS, and JS:
+### 4. Build Static Production Bundle (GitHub Pages Ready)
 ```bash
 npm run build
 ```
-The compiled static website will be created in the `out/` folder, ready for deployment to GitHub Pages or any static web host.
+This compiles the entire application into pure static HTML, CSS, and JS inside the `out/` directory, ready to deploy to GitHub Pages or any static CDN.
 
 ---
 
-## Responsible AI and Legal Disclaimer
+## 🔒 Privacy, Security & Ethical AI
 
-ClauseClear is an educational transparency and consumer awareness tool designed to help students identify contractual risks and advocate for fair terms. It does not provide formal legal representation, attorney-client privileged advice, or legal counsel. Users are encouraged to consult their university student legal services or a licensed attorney for binding legal matters.
+* 🛡️ **Zero Data Retention:** Custom contract text is processed purely in-memory and is never stored on a database, disk, or remote server.
+* 🔑 **Client-Side Key Isolation:** User API keys remain in the client's browser `localStorage` and are transmitted directly to Google's API endpoints via HTTPS.
+* ⚖️ **Educational Transparency Disclaimer:** ClauseClear is an educational transparency and consumer awareness tool designed to empower students. It does not constitute formal legal representation or attorney-client privileged counsel.
+
+---
+
+## 👥 Authors & Acknowledgments
+
+* **Built for:** NextSpark Hacks 2026
+* **Live Demo:** [https://shaunjee.github.io/ClauseClear/](https://shaunjee.github.io/ClauseClear/)
+* **Repository:** [https://github.com/shaunjee/ClauseClear](https://github.com/shaunjee/ClauseClear)
+* **License:** [MIT License](./LICENSE)
+
+<div align="center">
+  <br />
+  <strong>ClauseClear: Empowering students to sign with confidence.</strong>
+  <br />
+  <sub>Made with ❤️ for students, renters, and builders everywhere.</sub>
+</div>
