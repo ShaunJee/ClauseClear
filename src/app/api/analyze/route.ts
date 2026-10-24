@@ -14,7 +14,7 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { contractText, fileBase64, mimeType, presetId, userApiKey } = body;
+    const { contractText, fileBase64, mimeType, presetId, userApiKey, preferredModel } = body;
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -94,8 +94,8 @@ CRITICAL INSTRUCTIONS FOR EXHAUSTIVE CLAUSE COVERAGE:
       },
     ];
 
-    // Resolve single active model from Google ModelService (cached in memory)
-    const activeModel = await resolveActiveGeminiModel(apiKey);
+    // Resolve active model from Google ModelService (cached in memory)
+    const activeModel = await resolveActiveGeminiModel(apiKey, preferredModel);
     const googleProvider = getGoogleProvider(apiKey);
     let lastError: any = null;
     let quotaHit = false;

@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
-import { testGeminiKeyDirectly } from "../lib/gemini-browser";
+import { testGeminiKeyDirectly, GEMINI_MODEL_OPTIONS } from "../lib/gemini-browser";
 
 export function Navbar({
   onOpenUpload,
@@ -42,6 +42,7 @@ export function Navbar({
   const [menuOpen, setMenuOpen] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [hasSavedKey, setHasSavedKey] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.5-flash");
   const [showKey, setShowKey] = useState(false);
   const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -63,6 +64,11 @@ export function Navbar({
         setApiKeyInput(storedKey);
         setHasSavedKey(true);
       }
+
+      const storedModel = localStorage.getItem("clauseclear_selected_model");
+      if (storedModel) {
+        setSelectedModel(storedModel);
+      }
     }
   }, []);
 
@@ -77,6 +83,11 @@ export function Navbar({
         } else {
           setApiKeyInput("");
           setHasSavedKey(false);
+        }
+
+        const storedModel = localStorage.getItem("clauseclear_selected_model");
+        if (storedModel) {
+          setSelectedModel(storedModel);
         }
       }
     };
@@ -132,7 +143,7 @@ export function Navbar({
       const res = await fetch("/api/test-key", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey: keyToTest }),
+        body: JSON.stringify({ apiKey: keyToTest, model: selectedModel }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -147,7 +158,7 @@ export function Navbar({
     }
 
     try {
-      const directResult = await testGeminiKeyDirectly(keyToTest);
+      const directResult = await testGeminiKeyDirectly(keyToTest, selectedModel);
       if (directResult.ok) {
         setTestStatus("success");
         setTestMessage(directResult.message);
@@ -170,6 +181,7 @@ export function Navbar({
         localStorage.removeItem("clauseclear_gemini_key");
         setHasSavedKey(false);
       }
+      localStorage.setItem("clauseclear_selected_model", selectedModel);
       window.dispatchEvent(new Event("storage"));
     }
     setIsKeyModalOpen(false);
@@ -187,6 +199,9 @@ export function Navbar({
     setTestStatus("idle");
     setTestMessage("");
   };
+
+  const selectedModelObj =
+    GEMINI_MODEL_OPTIONS.find((m) => m.id === selectedModel) || GEMINI_MODEL_OPTIONS[0];
 
   const getMaskedKey = (key: string) => {
     if (!key || key.length < 8) return "••••••••";
@@ -400,7 +415,7 @@ export function Navbar({
                       {hasSavedKey
                         ? `Custom key configured (${getMaskedKey(
                             apiKeyInput
-                          )}). Used for structured audits and counter-offers.`
+                          )}) with ${selectedModelObj.name}. Used for live audits & counter-offers.`
                         : "Zero-API-key mode. 25+ pattern rules analyze leases, internships, and memberships locally."}
                     </p>
                   </div>
@@ -462,6 +477,72 @@ export function Navbar({
               <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
                 Your key stays strictly inside your browser localStorage and is sent securely to Google Gemini for legal auditing. It is never stored on our database.
               </p>
+            </div>
+
+            {/* Preferred Model Selector */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="gemini-model-select" className="cc-label flex items-center gap-1.5">
+                  <Cpu className="h-3.5 w-3.5 text-indigo-500" /> Preferred AI Model
+                </label>
+                <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
+                  {selectedModelObj.tierLabel}
+                </span>
+              </div>
+
+              <div className="relative">
+                <select
+                  id="gemini-model-select"
+                  value={selectedModel}
+                  onChange={(e) => {
+                    const nextModel = e.target.value;
+                    setSelectedModel(nextModel);
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("clauseclear_selected_model", nextModel);
+                    }
+                    if (testStatus !== "idle") setTestStatus("idle");
+                  }}
+                  className="cc-input font-medium text-xs sm:text-sm pr-9 cursor-pointer appearance-none bg-white dark:bg-[#12101c]"
+                >
+                  <optgroup label="1. Workhorse & Speed (Flash Family)">
+                    <option value="gemini-3.5-flash">Gemini 3.5 Flash (Default - Balanced Pro Reasoning & Speed)</option>
+                    <option value="gemini-3.8-flash">Gemini 3.8 Flash (Complex Logic & Long Horizon)</option>
+                    <option value="gemini-3.7-flash">Gemini 3.7 Flash (Intelligent Everyday Driver)</option>
+                    <option value="gemini-3.6-flash">Gemini 3.6 Flash (Fast Clause Scanning)</option>
+                  </optgroup>
+                  <optgroup label="2. Flagship & Advanced Reasoning">
+                    <option value="gemini-4-argon">Gemini 4 Argon (Google Flagship Frontier, 1M Context)</option>
+                    <option value="gemini-2.5-pro">Gemini 2.5 Pro (Adaptive Deep Legal Thinking)</option>
+                  </optgroup>
+                  <optgroup label="3. High-Throughput & Budget (Lite Family)">
+                    <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Ultra Fast, Lowest Latency)</option>
+                    <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Cost-Efficient Text Workloads)</option>
+                  </optgroup>
+                  <optgroup label="4. Universal Compatibility">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Stable Release)</option>
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy Support)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Extensive Context)</option>
+                  </optgroup>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              </div>
+
+              {/* Model Description Helper */}
+              {selectedModelObj && (
+                <div className="rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600 dark:bg-white/[0.03] dark:text-slate-400 border border-slate-200/60 dark:border-white/5">
+                  <div className="flex items-center gap-1.5 font-medium text-slate-900 dark:text-slate-200">
+                    <span>{selectedModelObj.name}</span>
+                    {selectedModelObj.badge && (
+                      <span className="rounded bg-indigo-100 px-1.5 py-0.5 text-[10px] font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                        {selectedModelObj.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 leading-relaxed text-[11px]">
+                    {selectedModelObj.description}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Test Status Banner */}

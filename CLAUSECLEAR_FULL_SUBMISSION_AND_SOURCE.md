@@ -960,12 +960,14 @@ export function formatCurrency(amount: number): string {
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
 const PREFERRED_MODELS = [
-  "gemini-3.5-flash-lite",
   "gemini-3.5-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-2.0-flash-lite-preview-02-05",
   "gemini-3.8-flash",
+  "gemini-3.7-flash",
   "gemini-3.6-flash",
+  "gemini-4-argon",
+  "gemini-2.5-pro",
+  "gemini-3.5-flash-lite",
+  "gemini-3.1-flash-lite",
   "gemini-2.0-flash",
   "gemini-1.5-flash",
   "gemini-1.5-pro",
@@ -978,10 +980,16 @@ const modelCache = new Map<string, string>();
  * Dynamically resolves the best available Gemini model supported by the provided API key.
  * Queries Google's ModelService so accounts automatically get the right active model.
  */
-export async function resolveActiveGeminiModel(apiKey: string): Promise<string> {
+export async function resolveActiveGeminiModel(
+  apiKey: string,
+  preferredModel?: string
+): Promise<string> {
   const cleanKey = apiKey.trim();
-  if (modelCache.has(cleanKey)) {
-    return modelCache.get(cleanKey)!;
+  const userChoice = preferredModel || "gemini-3.5-flash";
+  const cacheKey = `${cleanKey}:${userChoice}`;
+
+  if (modelCache.has(cacheKey)) {
+    return modelCache.get(cacheKey)!;
   }
 
   try {
@@ -997,9 +1005,16 @@ export async function resolveActiveGeminiModel(apiKey: string): Promise<string> 
         .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
         .map((m) => m.name.replace(/^models\//, ""));
 
+      // 1. If preferred model is supported, pick it
+      if (supportedNames.includes(userChoice)) {
+        modelCache.set(cacheKey, userChoice);
+        return userChoice;
+      }
+
+      // 2. Fall back down priority list
       for (const pref of PREFERRED_MODELS) {
         if (supportedNames.includes(pref)) {
-          modelCache.set(cleanKey, pref);
+          modelCache.set(cacheKey, pref);
           return pref;
         }
       }
@@ -1007,16 +1022,16 @@ export async function resolveActiveGeminiModel(apiKey: string): Promise<string> 
       // If no preferred match, pick any available model supporting generateContent
       if (supportedNames.length > 0) {
         const fallback = supportedNames[0];
-        modelCache.set(cleanKey, fallback);
+        modelCache.set(cacheKey, fallback);
         return fallback;
       }
     }
   } catch (err) {
-    console.warn("Failed to query Google ModelService, falling back to gemini-3.5-flash-lite:", err);
+    console.warn("Failed to query Google ModelService, falling back to chosen model:", err);
   }
 
-  // Sensible default prioritized for speed
-  return "gemini-3.5-flash-lite";
+  // Sensible default prioritized for speed and legal accuracy
+  return userChoice;
 }
 
 /**
@@ -1039,13 +1054,111 @@ export function getGoogleProvider(apiKey: string) {
 import { ContractAuditResult, AnalyzedClause, NegotiationTone } from "./schema";
 import { calculateRiskMetrics } from "./scoring";
 
+export interface GeminiModelOption {
+  id: string;
+  name: string;
+  tier: "flash" | "flagship" | "lite" | "legacy";
+  tierLabel: string;
+  badge?: string;
+  description: string;
+}
+
+export const GEMINI_MODEL_OPTIONS: GeminiModelOption[] = [
+  // 1. Workhorse & Speed Models (Flash Family)
+  {
+    id: "gemini-3.5-flash",
+    name: "Gemini 3.5 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    badge: "Default",
+    description: "Balances Pro-level legal auditing with high speed and lower token pricing.",
+  },
+  {
+    id: "gemini-3.8-flash",
+    name: "Gemini 3.8 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Most intelligent Flash model, engineered for long-horizon software and complex workflows.",
+  },
+  {
+    id: "gemini-3.7-flash",
+    name: "Gemini 3.7 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Mid-tier refinement balancing deep reasoning with token efficiency.",
+  },
+  {
+    id: "gemini-3.6-flash",
+    name: "Gemini 3.6 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Intelligent everyday driver for fast clause scanning and analysis.",
+  },
+  // 2. Flagship & Advanced Reasoning Models
+  {
+    id: "gemini-4-argon",
+    name: "Gemini 4 Argon",
+    tier: "flagship",
+    tierLabel: "Flagship & Reasoning",
+    badge: "Frontier",
+    description: "Google's latest flagship frontier model with 1M token context and deep execution.",
+  },
+  {
+    id: "gemini-2.5-pro",
+    name: "Gemini 2.5 Pro",
+    tier: "flagship",
+    tierLabel: "Flagship & Reasoning",
+    description: "Stable high-capability Pro model for adaptive thinking and complex legal analysis.",
+  },
+  // 3. High-Throughput & Budget Models (Lite Family)
+  {
+    id: "gemini-3.5-flash-lite",
+    name: "Gemini 3.5 Flash-Lite",
+    tier: "lite",
+    tierLabel: "High-Throughput & Budget",
+    badge: "Fastest",
+    description: "Extremely fast, lowest-latency model optimized for high-volume text tasks.",
+  },
+  {
+    id: "gemini-3.1-flash-lite",
+    name: "Gemini 3.1 Flash-Lite",
+    tier: "lite",
+    tierLabel: "High-Throughput & Budget",
+    description: "Highly cost-efficient baseline model for massive-scale text workloads.",
+  },
+  // 4. Compatibility & Fallback Models
+  {
+    id: "gemini-2.0-flash",
+    name: "Gemini 2.0 Flash",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "Established stable Flash generation with widespread API key availability.",
+  },
+  {
+    id: "gemini-1.5-flash",
+    name: "Gemini 1.5 Flash",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "Reliable universal fallback supported on virtually all Google AI Studio accounts.",
+  },
+  {
+    id: "gemini-1.5-pro",
+    name: "Gemini 1.5 Pro",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "High-parameter fallback with extensive context comprehension.",
+  },
+];
+
 const PREFERRED_MODELS = [
-  "gemini-3.5-flash-lite",
   "gemini-3.5-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-2.0-flash-lite-preview-02-05",
   "gemini-3.8-flash",
+  "gemini-3.7-flash",
   "gemini-3.6-flash",
+  "gemini-4-argon",
+  "gemini-2.5-pro",
+  "gemini-3.5-flash-lite",
+  "gemini-3.1-flash-lite",
   "gemini-2.0-flash",
   "gemini-1.5-flash",
   "gemini-1.5-pro",
@@ -1055,12 +1168,22 @@ const browserModelCache = new Map<string, string>();
 
 /**
  * Dynamically resolves the best available Gemini model for the user's API key.
- * Queries Google ModelService directly from the browser with zero server dependency.
+ * Prioritizes the user's preferred model, then falls back through the supported list.
  */
-export async function resolveBrowserGeminiModel(apiKey: string): Promise<string> {
+export async function resolveBrowserGeminiModel(
+  apiKey: string,
+  preferredModel?: string
+): Promise<string> {
   const cleanKey = apiKey.trim();
-  if (browserModelCache.has(cleanKey)) {
-    return browserModelCache.get(cleanKey)!;
+  const userChoice =
+    preferredModel ||
+    (typeof window !== "undefined"
+      ? localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash"
+      : "gemini-3.5-flash");
+
+  const cacheKey = `${cleanKey}:${userChoice}`;
+  if (browserModelCache.has(cacheKey)) {
+    return browserModelCache.get(cacheKey)!;
   }
 
   try {
@@ -1075,30 +1198,38 @@ export async function resolveBrowserGeminiModel(apiKey: string): Promise<string>
         .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
         .map((m) => m.name.replace(/^models\//, ""));
 
+      // 1. If user's preferred model is supported by this key, select it immediately
+      if (supported.includes(userChoice)) {
+        browserModelCache.set(cacheKey, userChoice);
+        return userChoice;
+      }
+
+      // 2. Otherwise check fallback hierarchy
       for (const pref of PREFERRED_MODELS) {
         if (supported.includes(pref)) {
-          browserModelCache.set(cleanKey, pref);
+          browserModelCache.set(cacheKey, pref);
           return pref;
         }
       }
 
       if (supported.length > 0) {
-        browserModelCache.set(cleanKey, supported[0]);
+        browserModelCache.set(cacheKey, supported[0]);
         return supported[0];
       }
     }
   } catch (err) {
-    console.warn("Direct browser ModelService query failed, falling back to gemini-3.5-flash-lite:", err);
+    console.warn("Direct browser ModelService query failed, falling back to chosen model:", err);
   }
 
-  return "gemini-3.5-flash-lite";
+  return userChoice;
 }
 
 /**
  * Verifies a Gemini API key directly from the browser by listing available models.
  */
 export async function testGeminiKeyDirectly(
-  apiKey: string
+  apiKey: string,
+  targetModel?: string
 ): Promise<{ ok: boolean; message: string; model?: string }> {
   const cleanKey = apiKey.trim();
   if (!cleanKey) {
@@ -1116,7 +1247,7 @@ export async function testGeminiKeyDirectly(
       return { ok: false, message: errMsg };
     }
 
-    const model = await resolveBrowserGeminiModel(cleanKey);
+    const model = await resolveBrowserGeminiModel(cleanKey, targetModel);
     return {
       ok: true,
       message: `Verified! Active model: ${model}. Ready for live client-side audits.`,
@@ -1191,11 +1322,12 @@ You MUST return ONLY valid JSON matching this schema:
  */
 export async function callGeminiAuditDirectly(options: {
   apiKey: string;
+  preferredModel?: string;
   contractText?: string;
   fileBase64?: string;
   mimeType?: string;
 }): Promise<ContractAuditResult> {
-  const { apiKey, contractText, fileBase64, mimeType } = options;
+  const { apiKey, preferredModel, contractText, fileBase64, mimeType } = options;
   const cleanKey = apiKey.trim();
 
   if (!cleanKey) {
@@ -1205,7 +1337,7 @@ export async function callGeminiAuditDirectly(options: {
     throw new Error("No contract text or document file provided.");
   }
 
-  const model = await resolveBrowserGeminiModel(cleanKey);
+  const model = await resolveBrowserGeminiModel(cleanKey, preferredModel);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
   const parts: any[] = [];
@@ -1307,13 +1439,14 @@ export async function callGeminiAuditDirectly(options: {
  */
 export async function callGeminiNegotiateDirectly(options: {
   apiKey: string;
+  preferredModel?: string;
   contractTitle: string;
   selectedClauses: AnalyzedClause[];
   tone: NegotiationTone;
   counterpartyName?: string;
   userName?: string;
 }): Promise<{ emailSubject: string; emailBody: string; formalAddendumText: string }> {
-  const { apiKey, contractTitle, selectedClauses, tone, counterpartyName, userName } = options;
+  const { apiKey, preferredModel, contractTitle, selectedClauses, tone, counterpartyName, userName } = options;
   const cleanKey = apiKey.trim();
 
   if (!cleanKey) {
@@ -1363,7 +1496,7 @@ You MUST return ONLY valid JSON:
   "formalAddendumText": "string"
 }`;
 
-  const model = await resolveBrowserGeminiModel(cleanKey);
+  const model = await resolveBrowserGeminiModel(cleanKey, preferredModel);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
   const response = await fetch(endpoint, {
@@ -4668,7 +4801,7 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { contractText, fileBase64, mimeType, presetId, userApiKey } = body;
+    const { contractText, fileBase64, mimeType, presetId, userApiKey, preferredModel } = body;
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -4748,8 +4881,8 @@ CRITICAL INSTRUCTIONS FOR EXHAUSTIVE CLAUSE COVERAGE:
       },
     ];
 
-    // Resolve single active model from Google ModelService (cached in memory)
-    const activeModel = await resolveActiveGeminiModel(apiKey);
+    // Resolve active model from Google ModelService (cached in memory)
+    const activeModel = await resolveActiveGeminiModel(apiKey, preferredModel);
     const googleProvider = getGoogleProvider(apiKey);
     let lastError: any = null;
     let quotaHit = false;
@@ -4864,6 +4997,7 @@ export async function POST(req: NextRequest) {
       counterpartyName,
       userName,
       userApiKey,
+      preferredModel,
     } = body;
 
     const headerKey = req.headers.get("x-gemini-api-key");
@@ -4948,7 +5082,7 @@ REQUIREMENTS:
    - NEVER output the email as a single unbroken paragraph.
 3. 'formalAddendumText': A binding 1-page Rider / Addendum Schedule with signature lines that supersedes the original problematic clauses.`;
 
-      const activeModel = await resolveActiveGeminiModel(apiKey);
+      const activeModel = await resolveActiveGeminiModel(apiKey, preferredModel);
       const googleProvider = getGoogleProvider(apiKey);
 
       try {
@@ -5005,7 +5139,7 @@ export const maxDuration = 30;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { apiKey } = body;
+    const { apiKey, model: requestedModel } = body;
 
     const keyToTest = apiKey?.trim() || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
@@ -5017,7 +5151,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Dynamically resolve the model supported by the user's key/account
-    const modelId = await resolveActiveGeminiModel(keyToTest);
+    const modelId = await resolveActiveGeminiModel(keyToTest, requestedModel);
     const googleProvider = getGoogleProvider(keyToTest);
 
     const result = await generateText({
@@ -5081,7 +5215,7 @@ import {
 } from "lucide-react";
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
-import { testGeminiKeyDirectly } from "../lib/gemini-browser";
+import { testGeminiKeyDirectly, GEMINI_MODEL_OPTIONS } from "../lib/gemini-browser";
 
 export function Navbar({
   onOpenUpload,
@@ -5100,6 +5234,7 @@ export function Navbar({
   const [menuOpen, setMenuOpen] = useState(false);
   const [apiKeyInput, setApiKeyInput] = useState("");
   const [hasSavedKey, setHasSavedKey] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<string>("gemini-3.5-flash");
   const [showKey, setShowKey] = useState(false);
   const [testStatus, setTestStatus] = useState<"idle" | "testing" | "success" | "error">("idle");
   const [testMessage, setTestMessage] = useState("");
@@ -5121,6 +5256,11 @@ export function Navbar({
         setApiKeyInput(storedKey);
         setHasSavedKey(true);
       }
+
+      const storedModel = localStorage.getItem("clauseclear_selected_model");
+      if (storedModel) {
+        setSelectedModel(storedModel);
+      }
     }
   }, []);
 
@@ -5135,6 +5275,11 @@ export function Navbar({
         } else {
           setApiKeyInput("");
           setHasSavedKey(false);
+        }
+
+        const storedModel = localStorage.getItem("clauseclear_selected_model");
+        if (storedModel) {
+          setSelectedModel(storedModel);
         }
       }
     };
@@ -5190,7 +5335,7 @@ export function Navbar({
       const res = await fetch("/api/test-key", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey: keyToTest }),
+        body: JSON.stringify({ apiKey: keyToTest, model: selectedModel }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -5205,7 +5350,7 @@ export function Navbar({
     }
 
     try {
-      const directResult = await testGeminiKeyDirectly(keyToTest);
+      const directResult = await testGeminiKeyDirectly(keyToTest, selectedModel);
       if (directResult.ok) {
         setTestStatus("success");
         setTestMessage(directResult.message);
@@ -5228,6 +5373,7 @@ export function Navbar({
         localStorage.removeItem("clauseclear_gemini_key");
         setHasSavedKey(false);
       }
+      localStorage.setItem("clauseclear_selected_model", selectedModel);
       window.dispatchEvent(new Event("storage"));
     }
     setIsKeyModalOpen(false);
@@ -5245,6 +5391,9 @@ export function Navbar({
     setTestStatus("idle");
     setTestMessage("");
   };
+
+  const selectedModelObj =
+    GEMINI_MODEL_OPTIONS.find((m) => m.id === selectedModel) || GEMINI_MODEL_OPTIONS[0];
 
   const getMaskedKey = (key: string) => {
     if (!key || key.length < 8) return "••••••••";
@@ -5458,7 +5607,7 @@ export function Navbar({
                       {hasSavedKey
                         ? `Custom key configured (${getMaskedKey(
                             apiKeyInput
-                          )}). Used for structured audits and counter-offers.`
+                          )}) with ${selectedModelObj.name}. Used for live audits & counter-offers.`
                         : "Zero-API-key mode. 25+ pattern rules analyze leases, internships, and memberships locally."}
                     </p>
                   </div>
@@ -5520,6 +5669,72 @@ export function Navbar({
               <p className="text-[11px] leading-relaxed text-slate-500 dark:text-slate-400">
                 Your key stays strictly inside your browser localStorage and is sent securely to Google Gemini for legal auditing. It is never stored on our database.
               </p>
+            </div>
+
+            {/* Preferred Model Selector */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label htmlFor="gemini-model-select" className="cc-label flex items-center gap-1.5">
+                  <Cpu className="h-3.5 w-3.5 text-indigo-500" /> Preferred AI Model
+                </label>
+                <span className="rounded-full bg-indigo-500/10 px-2 py-0.5 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
+                  {selectedModelObj.tierLabel}
+                </span>
+              </div>
+
+              <div className="relative">
+                <select
+                  id="gemini-model-select"
+                  value={selectedModel}
+                  onChange={(e) => {
+                    const nextModel = e.target.value;
+                    setSelectedModel(nextModel);
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("clauseclear_selected_model", nextModel);
+                    }
+                    if (testStatus !== "idle") setTestStatus("idle");
+                  }}
+                  className="cc-input font-medium text-xs sm:text-sm pr-9 cursor-pointer appearance-none bg-white dark:bg-[#12101c]"
+                >
+                  <optgroup label="1. Workhorse & Speed (Flash Family)">
+                    <option value="gemini-3.5-flash">Gemini 3.5 Flash (Default - Balanced Pro Reasoning & Speed)</option>
+                    <option value="gemini-3.8-flash">Gemini 3.8 Flash (Complex Logic & Long Horizon)</option>
+                    <option value="gemini-3.7-flash">Gemini 3.7 Flash (Intelligent Everyday Driver)</option>
+                    <option value="gemini-3.6-flash">Gemini 3.6 Flash (Fast Clause Scanning)</option>
+                  </optgroup>
+                  <optgroup label="2. Flagship & Advanced Reasoning">
+                    <option value="gemini-4-argon">Gemini 4 Argon (Google Flagship Frontier, 1M Context)</option>
+                    <option value="gemini-2.5-pro">Gemini 2.5 Pro (Adaptive Deep Legal Thinking)</option>
+                  </optgroup>
+                  <optgroup label="3. High-Throughput & Budget (Lite Family)">
+                    <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Ultra Fast, Lowest Latency)</option>
+                    <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Cost-Efficient Text Workloads)</option>
+                  </optgroup>
+                  <optgroup label="4. Universal Compatibility">
+                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Stable Release)</option>
+                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy Support)</option>
+                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Extensive Context)</option>
+                  </optgroup>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+              </div>
+
+              {/* Model Description Helper */}
+              {selectedModelObj && (
+                <div className="rounded-xl bg-slate-50 p-2.5 text-xs text-slate-600 dark:bg-white/[0.03] dark:text-slate-400 border border-slate-200/60 dark:border-white/5">
+                  <div className="flex items-center gap-1.5 font-medium text-slate-900 dark:text-slate-200">
+                    <span>{selectedModelObj.name}</span>
+                    {selectedModelObj.badge && (
+                      <span className="rounded bg-indigo-100 px-1.5 py-0.5 text-[10px] font-bold text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300">
+                        {selectedModelObj.badge}
+                      </span>
+                    )}
+                  </div>
+                  <p className="mt-0.5 leading-relaxed text-[11px]">
+                    {selectedModelObj.description}
+                  </p>
+                </div>
+              )}
             </div>
 
             {/* Test Status Banner */}
@@ -5733,8 +5948,10 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
     setIsAnalyzing(true);
 
     let userApiKey = "";
+    let preferredModel = "gemini-3.5-flash";
     if (typeof window !== "undefined") {
       userApiKey = localStorage.getItem("clauseclear_gemini_key") || "";
+      preferredModel = localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash";
     }
 
     const controller = new AbortController();
@@ -5748,7 +5965,7 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
           "Content-Type": "application/json",
           ...(userApiKey ? { "x-gemini-api-key": userApiKey } : {}),
         },
-        body: JSON.stringify({ ...payload, userApiKey }),
+        body: JSON.stringify({ ...payload, userApiKey, preferredModel }),
       });
 
       if (!res.ok) throw new Error(`Analyze request failed (${res.status}).`);
@@ -5761,7 +5978,7 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
         await sleep(2500);
       } else {
         setAnalysisNotice(null);
-        setActiveEngineDisplay("Google Gemini");
+        setActiveEngineDisplay(`Google Gemini (${auditData.engineUsed || preferredModel})`);
         const elapsed = Date.now() - startedAt;
         await sleep(Math.max(600, 1800 - elapsed));
       }
@@ -5784,9 +6001,10 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
       // If user provided a Gemini API key, execute client-direct Google Gemini REST call
       if (userApiKey) {
         try {
-          setActiveEngineDisplay("Google Gemini (Client Direct)");
+          setActiveEngineDisplay(`Google Gemini (${preferredModel})`);
           const directAudit = await callGeminiAuditDirectly({
             apiKey: userApiKey,
+            preferredModel,
             contractText: payload.contractText,
             fileBase64: payload.fileBase64,
             mimeType: payload.mimeType,
@@ -7929,10 +8147,16 @@ export function NegotiationDrawer() {
         ? localStorage.getItem("clauseclear_gemini_key") || undefined
         : undefined;
 
+    const preferredModel =
+      typeof window !== "undefined"
+        ? localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash"
+        : "gemini-3.5-flash";
+
     if (!data && userApiKey) {
       try {
         data = await callGeminiNegotiateDirectly({
           apiKey: userApiKey,
+          preferredModel,
           contractTitle: contractTitle || auditResult?.contractTitle || "Agreement",
           selectedClauses,
           tone: toneToUse,

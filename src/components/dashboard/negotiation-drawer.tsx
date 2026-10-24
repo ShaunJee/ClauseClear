@@ -150,10 +150,16 @@ export function NegotiationDrawer() {
         ? localStorage.getItem("clauseclear_gemini_key") || undefined
         : undefined;
 
+    const preferredModel =
+      typeof window !== "undefined"
+        ? localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash"
+        : "gemini-3.5-flash";
+
     if (!data && userApiKey) {
       try {
         data = await callGeminiNegotiateDirectly({
           apiKey: userApiKey,
+          preferredModel,
           contractTitle: contractTitle || auditResult?.contractTitle || "Agreement",
           selectedClauses,
           tone: toneToUse,

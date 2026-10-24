@@ -7,7 +7,7 @@ export const maxDuration = 30;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { apiKey } = body;
+    const { apiKey, model: requestedModel } = body;
 
     const keyToTest = apiKey?.trim() || process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Dynamically resolve the model supported by the user's key/account
-    const modelId = await resolveActiveGeminiModel(keyToTest);
+    const modelId = await resolveActiveGeminiModel(keyToTest, requestedModel);
     const googleProvider = getGoogleProvider(keyToTest);
 
     const result = await generateText({

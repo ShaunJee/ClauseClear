@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       counterpartyName,
       userName,
       userApiKey,
+      preferredModel,
     } = body;
 
     const headerKey = req.headers.get("x-gemini-api-key");
@@ -109,7 +110,7 @@ REQUIREMENTS:
    - NEVER output the email as a single unbroken paragraph.
 3. 'formalAddendumText': A binding 1-page Rider / Addendum Schedule with signature lines that supersedes the original problematic clauses.`;
 
-      const activeModel = await resolveActiveGeminiModel(apiKey);
+      const activeModel = await resolveActiveGeminiModel(apiKey, preferredModel);
       const googleProvider = getGoogleProvider(apiKey);
 
       try {

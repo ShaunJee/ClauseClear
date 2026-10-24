@@ -117,8 +117,10 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
     setIsAnalyzing(true);
 
     let userApiKey = "";
+    let preferredModel = "gemini-3.5-flash";
     if (typeof window !== "undefined") {
       userApiKey = localStorage.getItem("clauseclear_gemini_key") || "";
+      preferredModel = localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash";
     }
 
     const controller = new AbortController();
@@ -132,7 +134,7 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
           "Content-Type": "application/json",
           ...(userApiKey ? { "x-gemini-api-key": userApiKey } : {}),
         },
-        body: JSON.stringify({ ...payload, userApiKey }),
+        body: JSON.stringify({ ...payload, userApiKey, preferredModel }),
       });
 
       if (!res.ok) throw new Error(`Analyze request failed (${res.status}).`);
@@ -145,7 +147,7 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
         await sleep(2500);
       } else {
         setAnalysisNotice(null);
-        setActiveEngineDisplay("Google Gemini");
+        setActiveEngineDisplay(`Google Gemini (${auditData.engineUsed || preferredModel})`);
         const elapsed = Date.now() - startedAt;
         await sleep(Math.max(600, 1800 - elapsed));
       }
@@ -168,9 +170,10 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
       // If user provided a Gemini API key, execute client-direct Google Gemini REST call
       if (userApiKey) {
         try {
-          setActiveEngineDisplay("Google Gemini (Client Direct)");
+          setActiveEngineDisplay(`Google Gemini (${preferredModel})`);
           const directAudit = await callGeminiAuditDirectly({
             apiKey: userApiKey,
+            preferredModel,
             contractText: payload.contractText,
             fileBase64: payload.fileBase64,
             mimeType: payload.mimeType,

@@ -1,13 +1,111 @@
 import { ContractAuditResult, AnalyzedClause, NegotiationTone } from "./schema";
 import { calculateRiskMetrics } from "./scoring";
 
+export interface GeminiModelOption {
+  id: string;
+  name: string;
+  tier: "flash" | "flagship" | "lite" | "legacy";
+  tierLabel: string;
+  badge?: string;
+  description: string;
+}
+
+export const GEMINI_MODEL_OPTIONS: GeminiModelOption[] = [
+  // 1. Workhorse & Speed Models (Flash Family)
+  {
+    id: "gemini-3.5-flash",
+    name: "Gemini 3.5 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    badge: "Default",
+    description: "Balances Pro-level legal auditing with high speed and lower token pricing.",
+  },
+  {
+    id: "gemini-3.8-flash",
+    name: "Gemini 3.8 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Most intelligent Flash model, engineered for long-horizon software and complex workflows.",
+  },
+  {
+    id: "gemini-3.7-flash",
+    name: "Gemini 3.7 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Mid-tier refinement balancing deep reasoning with token efficiency.",
+  },
+  {
+    id: "gemini-3.6-flash",
+    name: "Gemini 3.6 Flash",
+    tier: "flash",
+    tierLabel: "Workhorse & Speed",
+    description: "Intelligent everyday driver for fast clause scanning and analysis.",
+  },
+  // 2. Flagship & Advanced Reasoning Models
+  {
+    id: "gemini-4-argon",
+    name: "Gemini 4 Argon",
+    tier: "flagship",
+    tierLabel: "Flagship & Reasoning",
+    badge: "Frontier",
+    description: "Google's latest flagship frontier model with 1M token context and deep execution.",
+  },
+  {
+    id: "gemini-2.5-pro",
+    name: "Gemini 2.5 Pro",
+    tier: "flagship",
+    tierLabel: "Flagship & Reasoning",
+    description: "Stable high-capability Pro model for adaptive thinking and complex legal analysis.",
+  },
+  // 3. High-Throughput & Budget Models (Lite Family)
+  {
+    id: "gemini-3.5-flash-lite",
+    name: "Gemini 3.5 Flash-Lite",
+    tier: "lite",
+    tierLabel: "High-Throughput & Budget",
+    badge: "Fastest",
+    description: "Extremely fast, lowest-latency model optimized for high-volume text tasks.",
+  },
+  {
+    id: "gemini-3.1-flash-lite",
+    name: "Gemini 3.1 Flash-Lite",
+    tier: "lite",
+    tierLabel: "High-Throughput & Budget",
+    description: "Highly cost-efficient baseline model for massive-scale text workloads.",
+  },
+  // 4. Compatibility & Fallback Models
+  {
+    id: "gemini-2.0-flash",
+    name: "Gemini 2.0 Flash",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "Established stable Flash generation with widespread API key availability.",
+  },
+  {
+    id: "gemini-1.5-flash",
+    name: "Gemini 1.5 Flash",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "Reliable universal fallback supported on virtually all Google AI Studio accounts.",
+  },
+  {
+    id: "gemini-1.5-pro",
+    name: "Gemini 1.5 Pro",
+    tier: "legacy",
+    tierLabel: "Standard Fallback",
+    description: "High-parameter fallback with extensive context comprehension.",
+  },
+];
+
 const PREFERRED_MODELS = [
-  "gemini-3.5-flash-lite",
   "gemini-3.5-flash",
-  "gemini-2.0-flash-lite",
-  "gemini-2.0-flash-lite-preview-02-05",
   "gemini-3.8-flash",
+  "gemini-3.7-flash",
   "gemini-3.6-flash",
+  "gemini-4-argon",
+  "gemini-2.5-pro",
+  "gemini-3.5-flash-lite",
+  "gemini-3.1-flash-lite",
   "gemini-2.0-flash",
   "gemini-1.5-flash",
   "gemini-1.5-pro",
@@ -17,12 +115,22 @@ const browserModelCache = new Map<string, string>();
 
 /**
  * Dynamically resolves the best available Gemini model for the user's API key.
- * Queries Google ModelService directly from the browser with zero server dependency.
+ * Prioritizes the user's preferred model, then falls back through the supported list.
  */
-export async function resolveBrowserGeminiModel(apiKey: string): Promise<string> {
+export async function resolveBrowserGeminiModel(
+  apiKey: string,
+  preferredModel?: string
+): Promise<string> {
   const cleanKey = apiKey.trim();
-  if (browserModelCache.has(cleanKey)) {
-    return browserModelCache.get(cleanKey)!;
+  const userChoice =
+    preferredModel ||
+    (typeof window !== "undefined"
+      ? localStorage.getItem("clauseclear_selected_model") || "gemini-3.5-flash"
+      : "gemini-3.5-flash");
+
+  const cacheKey = `${cleanKey}:${userChoice}`;
+  if (browserModelCache.has(cacheKey)) {
+    return browserModelCache.get(cacheKey)!;
   }
 
   try {
@@ -37,30 +145,38 @@ export async function resolveBrowserGeminiModel(apiKey: string): Promise<string>
         .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
         .map((m) => m.name.replace(/^models\//, ""));
 
+      // 1. If user's preferred model is supported by this key, select it immediately
+      if (supported.includes(userChoice)) {
+        browserModelCache.set(cacheKey, userChoice);
+        return userChoice;
+      }
+
+      // 2. Otherwise check fallback hierarchy
       for (const pref of PREFERRED_MODELS) {
         if (supported.includes(pref)) {
-          browserModelCache.set(cleanKey, pref);
+          browserModelCache.set(cacheKey, pref);
           return pref;
         }
       }
 
       if (supported.length > 0) {
-        browserModelCache.set(cleanKey, supported[0]);
+        browserModelCache.set(cacheKey, supported[0]);
         return supported[0];
       }
     }
   } catch (err) {
-    console.warn("Direct browser ModelService query failed, falling back to gemini-3.5-flash-lite:", err);
+    console.warn("Direct browser ModelService query failed, falling back to chosen model:", err);
   }
 
-  return "gemini-3.5-flash-lite";
+  return userChoice;
 }
 
 /**
  * Verifies a Gemini API key directly from the browser by listing available models.
  */
 export async function testGeminiKeyDirectly(
-  apiKey: string
+  apiKey: string,
+  targetModel?: string
 ): Promise<{ ok: boolean; message: string; model?: string }> {
   const cleanKey = apiKey.trim();
   if (!cleanKey) {
@@ -78,7 +194,7 @@ export async function testGeminiKeyDirectly(
       return { ok: false, message: errMsg };
     }
 
-    const model = await resolveBrowserGeminiModel(cleanKey);
+    const model = await resolveBrowserGeminiModel(cleanKey, targetModel);
     return {
       ok: true,
       message: `Verified! Active model: ${model}. Ready for live client-side audits.`,
@@ -153,11 +269,12 @@ You MUST return ONLY valid JSON matching this schema:
  */
 export async function callGeminiAuditDirectly(options: {
   apiKey: string;
+  preferredModel?: string;
   contractText?: string;
   fileBase64?: string;
   mimeType?: string;
 }): Promise<ContractAuditResult> {
-  const { apiKey, contractText, fileBase64, mimeType } = options;
+  const { apiKey, preferredModel, contractText, fileBase64, mimeType } = options;
   const cleanKey = apiKey.trim();
 
   if (!cleanKey) {
@@ -167,7 +284,7 @@ export async function callGeminiAuditDirectly(options: {
     throw new Error("No contract text or document file provided.");
   }
 
-  const model = await resolveBrowserGeminiModel(cleanKey);
+  const model = await resolveBrowserGeminiModel(cleanKey, preferredModel);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
   const parts: any[] = [];
@@ -269,13 +386,14 @@ export async function callGeminiAuditDirectly(options: {
  */
 export async function callGeminiNegotiateDirectly(options: {
   apiKey: string;
+  preferredModel?: string;
   contractTitle: string;
   selectedClauses: AnalyzedClause[];
   tone: NegotiationTone;
   counterpartyName?: string;
   userName?: string;
 }): Promise<{ emailSubject: string; emailBody: string; formalAddendumText: string }> {
-  const { apiKey, contractTitle, selectedClauses, tone, counterpartyName, userName } = options;
+  const { apiKey, preferredModel, contractTitle, selectedClauses, tone, counterpartyName, userName } = options;
   const cleanKey = apiKey.trim();
 
   if (!cleanKey) {
@@ -325,7 +443,7 @@ You MUST return ONLY valid JSON:
   "formalAddendumText": "string"
 }`;
 
-  const model = await resolveBrowserGeminiModel(cleanKey);
+  const model = await resolveBrowserGeminiModel(cleanKey, preferredModel);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
   const response = await fetch(endpoint, {
