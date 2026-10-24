@@ -73,28 +73,6 @@ export const GEMINI_MODEL_OPTIONS: GeminiModelOption[] = [
     tierLabel: "High-Throughput & Budget",
     description: "Highly cost-efficient baseline model for massive-scale text workloads.",
   },
-  // 4. Compatibility & Fallback Models
-  {
-    id: "gemini-2.0-flash",
-    name: "Gemini 2.0 Flash",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "Established stable Flash generation with widespread API key availability.",
-  },
-  {
-    id: "gemini-1.5-flash",
-    name: "Gemini 1.5 Flash",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "Reliable universal fallback supported on virtually all Google AI Studio accounts.",
-  },
-  {
-    id: "gemini-1.5-pro",
-    name: "Gemini 1.5 Pro",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "High-parameter fallback with extensive context comprehension.",
-  },
 ];
 
 const PREFERRED_MODELS = [
@@ -106,9 +84,6 @@ const PREFERRED_MODELS = [
   "gemini-2.5-pro",
   "gemini-3.5-flash-lite",
   "gemini-3.1-flash-lite",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
 ];
 
 const browserModelCache = new Map<string, string>();

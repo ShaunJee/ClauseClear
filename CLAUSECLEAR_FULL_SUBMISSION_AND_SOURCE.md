@@ -968,9 +968,6 @@ const PREFERRED_MODELS = [
   "gemini-2.5-pro",
   "gemini-3.5-flash-lite",
   "gemini-3.1-flash-lite",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
 ];
 
 // In-memory cache of resolved model per API key to prevent extra network roundtrips
@@ -1126,28 +1123,6 @@ export const GEMINI_MODEL_OPTIONS: GeminiModelOption[] = [
     tierLabel: "High-Throughput & Budget",
     description: "Highly cost-efficient baseline model for massive-scale text workloads.",
   },
-  // 4. Compatibility & Fallback Models
-  {
-    id: "gemini-2.0-flash",
-    name: "Gemini 2.0 Flash",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "Established stable Flash generation with widespread API key availability.",
-  },
-  {
-    id: "gemini-1.5-flash",
-    name: "Gemini 1.5 Flash",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "Reliable universal fallback supported on virtually all Google AI Studio accounts.",
-  },
-  {
-    id: "gemini-1.5-pro",
-    name: "Gemini 1.5 Pro",
-    tier: "legacy",
-    tierLabel: "Standard Fallback",
-    description: "High-parameter fallback with extensive context comprehension.",
-  },
 ];
 
 const PREFERRED_MODELS = [
@@ -1159,9 +1134,6 @@ const PREFERRED_MODELS = [
   "gemini-2.5-pro",
   "gemini-3.5-flash-lite",
   "gemini-3.1-flash-lite",
-  "gemini-2.0-flash",
-  "gemini-1.5-flash",
-  "gemini-1.5-pro",
 ];
 
 const browserModelCache = new Map<string, string>();
@@ -5709,11 +5681,6 @@ export function Navbar({
                   <optgroup label="3. High-Throughput & Budget (Lite Family)">
                     <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Ultra Fast, Lowest Latency)</option>
                     <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Cost-Efficient Text Workloads)</option>
-                  </optgroup>
-                  <optgroup label="4. Universal Compatibility">
-                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Stable Release)</option>
-                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy Support)</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Extensive Context)</option>
                   </optgroup>
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />

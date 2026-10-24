@@ -518,11 +518,6 @@ export function Navbar({
                     <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite (Ultra Fast, Lowest Latency)</option>
                     <option value="gemini-3.1-flash-lite">Gemini 3.1 Flash-Lite (Cost-Efficient Text Workloads)</option>
                   </optgroup>
-                  <optgroup label="4. Universal Compatibility">
-                    <option value="gemini-2.0-flash">Gemini 2.0 Flash (Stable Release)</option>
-                    <option value="gemini-1.5-flash">Gemini 1.5 Flash (Legacy Support)</option>
-                    <option value="gemini-1.5-pro">Gemini 1.5 Pro (Extensive Context)</option>
-                  </optgroup>
                 </select>
                 <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               </div>
