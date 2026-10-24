@@ -14,6 +14,7 @@ import {
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
 import { analyzeCustomTextHeuristically } from "../lib/heuristic-analyzer";
+import { callGeminiAuditDirectly } from "../lib/gemini-browser";
 
 const PRESET_STYLE: Record<string, { icon: typeof Home; tile: string; tag: string }> = {
   "slumlord-lease": { icon: Home, tile: "from-rose-500 to-orange-400", tag: "Off-campus lease" },
@@ -154,35 +155,55 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
       if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       onAuditComplete?.();
     } catch (err: any) {
-      console.warn("Analysis error, using heuristic or preset fallback:", err);
+      console.warn("Server API analyze unavailable, attempting client direct or fallback:", err);
 
       if (payload.presetId) {
         await sleep(500);
         loadPreset(payload.presetId);
         if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         onAuditComplete?.();
-      } else if (payload.contractText) {
+        return;
+      }
+
+      // If user provided a Gemini API key, execute client-direct Google Gemini REST call
+      if (userApiKey) {
+        try {
+          setActiveEngineDisplay("Google Gemini (Client Direct)");
+          const directAudit = await callGeminiAuditDirectly({
+            apiKey: userApiKey,
+            contractText: payload.contractText,
+            fileBase64: payload.fileBase64,
+            mimeType: payload.mimeType,
+          });
+
+          setAnalysisNotice(null);
+          if (payload.contractText) setRawText(payload.contractText);
+          setAuditResult(directAudit);
+          if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+          onAuditComplete?.();
+          return;
+        } catch (directAiErr: any) {
+          console.warn("Direct browser Gemini call encountered error, falling back to heuristic engine:", directAiErr);
+        }
+      }
+
+      if (payload.contractText) {
         const fallbackAudit = analyzeCustomTextHeuristically(payload.contractText);
-        const name = err?.name;
-        const msg = String(err?.message || "");
-        const notice =
-          name === "AbortError"
-            ? "Google AI took too long to respond. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
-            : name === "TypeError" || msg.includes("Failed to fetch") || msg.includes("NetworkError")
-            ? "Local server connection interrupted. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
-            : "Google AI service unavailable or rate limit reached. Seamlessly analyzed with ClauseClear Local Heuristic Engine.";
+        const notice = userApiKey
+          ? "Google Gemini API reached a rate limit or network issue. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
+          : "Static export mode active. Seamlessly analyzed with ClauseClear Local Heuristic Engine.";
 
         fallbackAudit.quotaNotice = notice;
         setAnalysisNotice(notice);
         setActiveEngineDisplay("Local Heuristic Engine (Fallback Active)");
-        await sleep(2500);
+        await sleep(1500);
         setRawText(payload.contractText);
         setAuditResult(fallbackAudit);
         if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         onAuditComplete?.();
       } else {
         setAnalysisError(
-          "We could not analyze that file right now. Try again, or paste the contract text instead."
+          "To audit PDF or image files on the static site, please enter your free Google Gemini API key via the Key icon in the top right, or copy and paste the text into the Paste tab."
         );
       }
     } finally {

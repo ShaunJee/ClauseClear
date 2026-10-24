@@ -13,6 +13,7 @@ const filesToInclude = [
   { path: 'src/lib/schema.ts', lang: 'typescript', desc: 'TypeScript interfaces and data schemas for audit results, clauses, and counter-offers' },
   { path: 'src/lib/scoring.ts', lang: 'typescript', desc: 'Deterministic 0 to 100 contract audit scoring algorithm with weighted category penalties' },
   { path: 'src/lib/gemini-client.ts', lang: 'typescript', desc: 'Gemini 1.5 Flash API client with structured prompts and JSON response validation' },
+  { path: 'src/lib/gemini-browser.ts', lang: 'typescript', desc: 'Browser-native Gemini REST client enabling direct client-to-API calls on static GitHub Pages with CORS support' },
   { path: 'src/lib/flash.ts', lang: 'typescript', desc: 'AI model configuration and prompt parameters' },
   { path: 'src/lib/heuristic-analyzer.ts', lang: 'typescript', desc: 'Complete client-side zero-latency deterministic heuristic contract analysis engine' },
   { path: 'src/lib/negotiation-generator.ts', lang: 'typescript', desc: 'Deterministic multi-tone counter-offer and legal redline generator' },
@@ -103,9 +104,10 @@ University students routinely sign legally binding contracts without understandi
   - *Collaborative:* Friendly and constructive, ideal for polite landlords.
   - *Firm:* Professional and assertive, establishing clear boundaries.
   - *Legal / Formal:* Cites statutory rights and standard contract doctrine.
-- **Zero-Latency Dual Engine:**
-  - *Cloud AI:* Leverages Google Gemini 1.5 Flash for nuanced natural language reasoning.
-  - *Deterministic Client Fallback:* Powered by an in-browser heuristic engine (\`heuristic-analyzer.ts\`) that parses clauses offline with zero server dependency.
+- **Resilient Tri-Engine Architecture:**
+  - *Cloud AI (Server-Side):* App Router API routes (\`/api/analyze\`, \`/api/negotiate\`) with \`@ai-sdk/google\` for full-stack environments.
+  - *Cloud AI (Client-Direct Browser):* Native browser-to-Gemini REST integration (\`src/lib/gemini-browser.ts\`) with CORS support, enabling live BYOK AI audits and multimodal PDF uploads on static hosts like GitHub Pages with zero server backend.
+  - *Offline Deterministic Heuristic Engine:* In-memory 25-rule NLP extractor (\`src/lib/heuristic-analyzer.ts\`) guaranteeing instant zero-latency audits even with zero API key or during network disruptions.
 
 ---
 
@@ -116,8 +118,9 @@ University students routinely sign legally binding contracts without understandi
 | **Frontend Framework** | Next.js 14 (App Router), React 18, TypeScript | Type-safe, modular, production-ready web application |
 | **Styling & UI** | Tailwind CSS, Lucide React, Glassmorphism | Responsive modern dark-mode aesthetic with micro-animations |
 | **State Management** | Zustand (\`use-audit-store.ts\`) | Centralized reactive store synchronizing UI, highlights, and audit results |
-| **AI Integration** | Google Gemini 1.5 Flash API (\`@google/genai\`) | High-speed, structured JSON contract analysis and counter-offer drafting |
-| **Offline Fallback** | Deterministic Regex & AST Rule Engine | 100% offline functionality and zero-latency instant preset loading |
+| **Client-Direct AI Engine** | Browser REST Client (\`gemini-browser.ts\`) | Direct browser-to-Gemini 1.5 API calls with CORS and structured JSON outputs |
+| **Server AI Engine** | Next.js API Routes + \`@ai-sdk/google\` | Server-side Gemini model resolution and structured schema enforcement |
+| **Offline Fallback Engine** | Offset-Tracked Regex & Heuristic Engine | 100% offline functionality, guaranteed verbatim quotes, zero-latency presets |
 | **Build & Deploy** | Next.js Static Export (\`output: export\`), GitHub Actions | Automated CI/CD pipeline deploying directly to GitHub Pages |
 
 ---

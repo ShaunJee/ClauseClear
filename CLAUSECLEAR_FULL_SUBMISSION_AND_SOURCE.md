@@ -64,9 +64,10 @@ University students routinely sign legally binding contracts without understandi
   - *Collaborative:* Friendly and constructive, ideal for polite landlords.
   - *Firm:* Professional and assertive, establishing clear boundaries.
   - *Legal / Formal:* Cites statutory rights and standard contract doctrine.
-- **Zero-Latency Dual Engine:**
-  - *Cloud AI:* Leverages Google Gemini 1.5 Flash for nuanced natural language reasoning.
-  - *Deterministic Client Fallback:* Powered by an in-browser heuristic engine (`heuristic-analyzer.ts`) that parses clauses offline with zero server dependency.
+- **Resilient Tri-Engine Architecture:**
+  - *Cloud AI (Server-Side):* App Router API routes (`/api/analyze`, `/api/negotiate`) with `@ai-sdk/google` for full-stack environments.
+  - *Cloud AI (Client-Direct Browser):* Native browser-to-Gemini REST integration (`src/lib/gemini-browser.ts`) with CORS support, enabling live BYOK AI audits and multimodal PDF uploads on static hosts like GitHub Pages with zero server backend.
+  - *Offline Deterministic Heuristic Engine:* In-memory 25-rule NLP extractor (`src/lib/heuristic-analyzer.ts`) guaranteeing instant zero-latency audits even with zero API key or during network disruptions.
 
 ---
 
@@ -77,8 +78,9 @@ University students routinely sign legally binding contracts without understandi
 | **Frontend Framework** | Next.js 14 (App Router), React 18, TypeScript | Type-safe, modular, production-ready web application |
 | **Styling & UI** | Tailwind CSS, Lucide React, Glassmorphism | Responsive modern dark-mode aesthetic with micro-animations |
 | **State Management** | Zustand (`use-audit-store.ts`) | Centralized reactive store synchronizing UI, highlights, and audit results |
-| **AI Integration** | Google Gemini 1.5 Flash API (`@google/genai`) | High-speed, structured JSON contract analysis and counter-offer drafting |
-| **Offline Fallback** | Deterministic Regex & AST Rule Engine | 100% offline functionality and zero-latency instant preset loading |
+| **Client-Direct AI Engine** | Browser REST Client (`gemini-browser.ts`) | Direct browser-to-Gemini 1.5 API calls with CORS and structured JSON outputs |
+| **Server AI Engine** | Next.js API Routes + `@ai-sdk/google` | Server-side Gemini model resolution and structured schema enforcement |
+| **Offline Fallback Engine** | Offset-Tracked Regex & Heuristic Engine | 100% offline functionality, guaranteed verbatim quotes, zero-latency presets |
 | **Build & Deploy** | Next.js Static Export (`output: export`), GitHub Actions | Automated CI/CD pipeline deploying directly to GitHub Pages |
 
 ---
@@ -96,28 +98,29 @@ University students routinely sign legally binding contracts without understandi
 | 7 | [`src/lib/schema.ts`](#file-7-src-lib-schema-ts) | typescript | TypeScript interfaces and data schemas for audit results, clauses, and counter-offers |
 | 8 | [`src/lib/scoring.ts`](#file-8-src-lib-scoring-ts) | typescript | Deterministic 0 to 100 contract audit scoring algorithm with weighted category penalties |
 | 9 | [`src/lib/gemini-client.ts`](#file-9-src-lib-gemini-client-ts) | typescript | Gemini 1.5 Flash API client with structured prompts and JSON response validation |
-| 10 | [`src/lib/flash.ts`](#file-10-src-lib-flash-ts) | typescript | AI model configuration and prompt parameters |
-| 11 | [`src/lib/heuristic-analyzer.ts`](#file-11-src-lib-heuristic-analyzer-ts) | typescript | Complete client-side zero-latency deterministic heuristic contract analysis engine |
-| 12 | [`src/lib/negotiation-generator.ts`](#file-12-src-lib-negotiation-generator-ts) | typescript | Deterministic multi-tone counter-offer and legal redline generator |
-| 13 | [`src/lib/sample-contracts.ts`](#file-13-src-lib-sample-contracts-ts) | typescript | Real-world predatory student contract presets (sublease, employment, gym, NDA) |
-| 14 | [`src/lib/utils.ts`](#file-14-src-lib-utils-ts) | typescript | General utility helper functions |
-| 15 | [`src/store/use-audit-store.ts`](#file-15-src-store-use-audit-store-ts) | typescript | Zustand global reactive store managing audit state, contract text, and active highlights |
-| 16 | [`src/app/globals.css`](#file-16-src-app-globals-css) | css | Global CSS styles, glassmorphism design tokens, and smooth scroll utilities |
-| 17 | [`src/app/layout.tsx`](#file-17-src-app-layout-tsx) | tsx | Root layout metadata, Inter font imports, and notification container |
-| 18 | [`src/app/page.tsx`](#file-18-src-app-page-tsx) | tsx | Main landing page featuring hero section, interactive demo, and feature grid |
-| 19 | [`src/app/api/analyze/route.ts`](#file-19-src-app-api-analyze-route-ts) | typescript | Backend Next.js API route for Gemini 1.5 Flash contract auditing |
-| 20 | [`src/app/api/negotiate/route.ts`](#file-20-src-app-api-negotiate-route-ts) | typescript | Backend Next.js API route for AI counter-offer generation |
-| 21 | [`src/app/api/test-key/route.ts`](#file-21-src-app-api-test-key-route-ts) | typescript | API route for verifying user-provided Gemini API keys |
-| 22 | [`src/components/navbar.tsx`](#file-22-src-components-navbar-tsx) | tsx | Top navigation bar with BYOK API key manager and live deployment links |
-| 23 | [`src/components/upload-zone.tsx`](#file-23-src-components-upload-zone-tsx) | tsx | Contract upload interface with file dropzone, text input, and quick presets |
-| 24 | [`src/components/audit-loading-modal.tsx`](#file-24-src-components-audit-loading-modal-tsx) | tsx | Multi-step animated audit progress modal with real-time step status |
-| 25 | [`src/components/ui/count-up.tsx`](#file-25-src-components-ui-count-up-tsx) | tsx | Animated numeric count-up component for financial metrics and scores |
-| 26 | [`src/components/dashboard/audit-workspace.tsx`](#file-26-src-components-dashboard-audit-workspace-tsx) | tsx | Main split-pane auditing workspace orchestrating feed and document viewer |
-| 27 | [`src/components/dashboard/score-header.tsx`](#file-27-src-components-dashboard-score-header-tsx) | tsx | Audit score banner with circular SVG gauge, risk level, and cost summary |
-| 28 | [`src/components/dashboard/clause-feed.tsx`](#file-28-src-components-dashboard-clause-feed-tsx) | tsx | Categorized list of flagged predatory clauses with severity tags and explanations |
-| 29 | [`src/components/dashboard/document-viewer.tsx`](#file-29-src-components-dashboard-document-viewer-tsx) | tsx | Synchronized legal text viewer with color-coded highlights and jump-to-clause |
-| 30 | [`src/components/dashboard/true-cost-sim.tsx`](#file-30-src-components-dashboard-true-cost-sim-tsx) | tsx | Interactive financial simulator tallying hidden fees, deposits, and true costs |
-| 31 | [`src/components/dashboard/negotiation-drawer.tsx`](#file-31-src-components-dashboard-negotiation-drawer-tsx) | tsx | Sliding negotiation drawer with 3-tone counter-offer drafter and redline rider |
+| 10 | [`src/lib/gemini-browser.ts`](#file-10-src-lib-gemini-browser-ts) | typescript | Browser-native Gemini REST client enabling direct client-to-API calls on static GitHub Pages with CORS support |
+| 11 | [`src/lib/flash.ts`](#file-11-src-lib-flash-ts) | typescript | AI model configuration and prompt parameters |
+| 12 | [`src/lib/heuristic-analyzer.ts`](#file-12-src-lib-heuristic-analyzer-ts) | typescript | Complete client-side zero-latency deterministic heuristic contract analysis engine |
+| 13 | [`src/lib/negotiation-generator.ts`](#file-13-src-lib-negotiation-generator-ts) | typescript | Deterministic multi-tone counter-offer and legal redline generator |
+| 14 | [`src/lib/sample-contracts.ts`](#file-14-src-lib-sample-contracts-ts) | typescript | Real-world predatory student contract presets (sublease, employment, gym, NDA) |
+| 15 | [`src/lib/utils.ts`](#file-15-src-lib-utils-ts) | typescript | General utility helper functions |
+| 16 | [`src/store/use-audit-store.ts`](#file-16-src-store-use-audit-store-ts) | typescript | Zustand global reactive store managing audit state, contract text, and active highlights |
+| 17 | [`src/app/globals.css`](#file-17-src-app-globals-css) | css | Global CSS styles, glassmorphism design tokens, and smooth scroll utilities |
+| 18 | [`src/app/layout.tsx`](#file-18-src-app-layout-tsx) | tsx | Root layout metadata, Inter font imports, and notification container |
+| 19 | [`src/app/page.tsx`](#file-19-src-app-page-tsx) | tsx | Main landing page featuring hero section, interactive demo, and feature grid |
+| 20 | [`src/app/api/analyze/route.ts`](#file-20-src-app-api-analyze-route-ts) | typescript | Backend Next.js API route for Gemini 1.5 Flash contract auditing |
+| 21 | [`src/app/api/negotiate/route.ts`](#file-21-src-app-api-negotiate-route-ts) | typescript | Backend Next.js API route for AI counter-offer generation |
+| 22 | [`src/app/api/test-key/route.ts`](#file-22-src-app-api-test-key-route-ts) | typescript | API route for verifying user-provided Gemini API keys |
+| 23 | [`src/components/navbar.tsx`](#file-23-src-components-navbar-tsx) | tsx | Top navigation bar with BYOK API key manager and live deployment links |
+| 24 | [`src/components/upload-zone.tsx`](#file-24-src-components-upload-zone-tsx) | tsx | Contract upload interface with file dropzone, text input, and quick presets |
+| 25 | [`src/components/audit-loading-modal.tsx`](#file-25-src-components-audit-loading-modal-tsx) | tsx | Multi-step animated audit progress modal with real-time step status |
+| 26 | [`src/components/ui/count-up.tsx`](#file-26-src-components-ui-count-up-tsx) | tsx | Animated numeric count-up component for financial metrics and scores |
+| 27 | [`src/components/dashboard/audit-workspace.tsx`](#file-27-src-components-dashboard-audit-workspace-tsx) | tsx | Main split-pane auditing workspace orchestrating feed and document viewer |
+| 28 | [`src/components/dashboard/score-header.tsx`](#file-28-src-components-dashboard-score-header-tsx) | tsx | Audit score banner with circular SVG gauge, risk level, and cost summary |
+| 29 | [`src/components/dashboard/clause-feed.tsx`](#file-29-src-components-dashboard-clause-feed-tsx) | tsx | Categorized list of flagged predatory clauses with severity tags and explanations |
+| 30 | [`src/components/dashboard/document-viewer.tsx`](#file-30-src-components-dashboard-document-viewer-tsx) | tsx | Synchronized legal text viewer with color-coded highlights and jump-to-clause |
+| 31 | [`src/components/dashboard/true-cost-sim.tsx`](#file-31-src-components-dashboard-true-cost-sim-tsx) | tsx | Interactive financial simulator tallying hidden fees, deposits, and true costs |
+| 32 | [`src/components/dashboard/negotiation-drawer.tsx`](#file-32-src-components-dashboard-negotiation-drawer-tsx) | tsx | Sliding negotiation drawer with 3-tone counter-offer drafter and redline rider |
 
 ---
 
@@ -1026,8 +1029,377 @@ export function getGoogleProvider(apiKey: string) {
 
 ---
 
-<a id="file-10-src-lib-flash-ts"></a>
-### File 10: `src/lib/flash.ts`
+<a id="file-10-src-lib-gemini-browser-ts"></a>
+### File 10: `src/lib/gemini-browser.ts`
+
+> **Purpose:** Browser-native Gemini REST client enabling direct client-to-API calls on static GitHub Pages with CORS support  
+> **Path:** `src/lib/gemini-browser.ts`  
+
+```typescript
+import { ContractAuditResult, AnalyzedClause, NegotiationTone } from "./schema";
+import { calculateRiskMetrics } from "./scoring";
+
+const PREFERRED_MODELS = [
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-1.5-flash",
+  "gemini-1.5-flash-latest",
+  "gemini-1.5-pro",
+  "gemini-2.0-flash-lite",
+];
+
+const browserModelCache = new Map<string, string>();
+
+/**
+ * Dynamically resolves the best available Gemini model for the user's API key.
+ * Queries Google ModelService directly from the browser with zero server dependency.
+ */
+export async function resolveBrowserGeminiModel(apiKey: string): Promise<string> {
+  const cleanKey = apiKey.trim();
+  if (browserModelCache.has(cleanKey)) {
+    return browserModelCache.get(cleanKey)!;
+  }
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+      const models: any[] = data.models || [];
+      const supported = models
+        .filter((m) => m.supportedGenerationMethods?.includes("generateContent"))
+        .map((m) => m.name.replace(/^models\//, ""));
+
+      for (const pref of PREFERRED_MODELS) {
+        if (supported.includes(pref)) {
+          browserModelCache.set(cleanKey, pref);
+          return pref;
+        }
+      }
+
+      if (supported.length > 0) {
+        browserModelCache.set(cleanKey, supported[0]);
+        return supported[0];
+      }
+    }
+  } catch (err) {
+    console.warn("Direct browser ModelService query failed, falling back to gemini-1.5-flash:", err);
+  }
+
+  return "gemini-1.5-flash";
+}
+
+/**
+ * Verifies a Gemini API key directly from the browser by listing available models.
+ */
+export async function testGeminiKeyDirectly(
+  apiKey: string
+): Promise<{ ok: boolean; message: string; model?: string }> {
+  const cleanKey = apiKey.trim();
+  if (!cleanKey) {
+    return { ok: false, message: "Please provide an API key." };
+  }
+
+  try {
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models?key=${cleanKey}`
+    );
+    const data = await res.json();
+
+    if (!res.ok) {
+      const errMsg = data?.error?.message || `Google API returned status ${res.status}`;
+      return { ok: false, message: errMsg };
+    }
+
+    const model = await resolveBrowserGeminiModel(cleanKey);
+    return {
+      ok: true,
+      message: `Verified! Active model: ${model}. Ready for live client-side audits.`,
+      model,
+    };
+  } catch (err: any) {
+    return {
+      ok: false,
+      message: err?.message || "Failed to connect to Google Gemini API from browser.",
+    };
+  }
+}
+
+const AUDIT_SYSTEM_PROMPT = `You are ClauseClear, a world-class consumer-protection and student-advocacy legal auditing AI.
+Your mission is to protect university students, first-time renters, and young freelancers from predatory contract clauses, hidden fees, unfair liabilities, and legal traps.
+
+CRITICAL INSTRUCTIONS FOR EXHAUSTIVE CLAUSE COVERAGE:
+1. EXHAUSTIVE SECTION COVERAGE: You MUST audit EVERY distinct numbered item, paragraph, and substantive covenant in the agreement without skipping any section. For short contracts (under 20 sections), evaluate EVERY SINGLE numbered item so the user can verify whether each section is safe or risky.
+2. BALANCED AUDIT OF BOTH SAFE AND RISKY CLAUSES:
+   - For standard, fair, and safe clauses, mark severity as 'fair' or 'info'. Explain why it is balanced or standard in 'plainEnglishSummary', give reassurance in 'legalContextNote', and set 'proposedAmendment' to 'No amendment needed; terms are standard and fair.'
+   - For burdensome, ambiguous, or predatory clauses, mark severity as 'warning' or 'critical', and provide a protective 'proposedAmendment'.
+3. 'exactQuote' MUST BE A VERBATIM, EXACT character-for-character substring from the text so our UI document highlighter can pinpoint and mark it in the text viewer.
+4. 'plainEnglishSummary' must be a blunt, punchy, 1-sentence translation in plain English that a 20-year-old college student immediately grasps.
+5. 'worstCaseScenario' must provide a realistic real-world dilemma or harm for critical/warning clauses (or a note confirming safety for fair/info clauses).
+6. 'financialItems' must extract EVERY cost: base rent/fee, recurring monthly fees, one-time admin charges, and conditional penalties (e.g. late fees, repair deductibles). If none stated, return empty array.
+7. 'missingProtections' must identify 2 to 4 crucial standard tenant/consumer protective terms that were left out entirely (e.g. 24h written notice, security deposit return window, habitability warranty).
+8. SPEED & CONCISENESS: Keep each summary, note, and amendment crisp, blunt, and concise (under 25 words per field).
+
+You MUST return ONLY valid JSON matching this schema:
+{
+  "contractTitle": "string",
+  "documentType": "lease" | "employment" | "service_agreement" | "nda" | "other",
+  "summary": "string",
+  "advertisedBasePriceDisplay": "string (e.g. $1,200/mo)",
+  "financialItems": [
+    {
+      "id": "string",
+      "label": "string",
+      "amount": number,
+      "billingType": "monthly_mandatory" | "one_time_mandatory" | "conditional_penalty",
+      "description": "string",
+      "frequency": "monthly" | "one_time" | "annual" | "per_occurrence"
+    }
+  ],
+  "clauses": [
+    {
+      "id": "string",
+      "sectionTitle": "string",
+      "severity": "critical" | "warning" | "fair" | "info",
+      "category": "Financial Liability" | "Termination & Renewal" | "Privacy & Entry" | "Maintenance & Repairs" | "IP & Ownership" | "Liability & Waivers",
+      "exactQuote": "string",
+      "plainEnglishSummary": "string",
+      "worstCaseScenario": "string",
+      "legalContextNote": "string",
+      "proposedAmendment": "string"
+    }
+  ],
+  "missingProtections": [
+    {
+      "id": "string",
+      "title": "string",
+      "importance": "high" | "medium" | "low",
+      "description": "string",
+      "suggestedAddition": "string"
+    }
+  ]
+}`;
+
+/**
+ * Executes a full contract audit directly from the client browser via Google Gemini REST API.
+ * Supports both raw text analysis and multimodal PDF/image analysis.
+ */
+export async function callGeminiAuditDirectly(options: {
+  apiKey: string;
+  contractText?: string;
+  fileBase64?: string;
+  mimeType?: string;
+}): Promise<ContractAuditResult> {
+  const { apiKey, contractText, fileBase64, mimeType } = options;
+  const cleanKey = apiKey.trim();
+
+  if (!cleanKey) {
+    throw new Error("No Gemini API key provided.");
+  }
+  if (!contractText && !fileBase64) {
+    throw new Error("No contract text or document file provided.");
+  }
+
+  const model = await resolveBrowserGeminiModel(cleanKey);
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
+
+  const parts: any[] = [];
+  if (fileBase64) {
+    parts.push({
+      text: "Perform an exhaustive consumer-advocacy audit covering every clause and numbered section in this contract document.",
+    });
+    parts.push({
+      inlineData: {
+        mimeType: mimeType || "application/pdf",
+        data: fileBase64,
+      },
+    });
+  } else {
+    parts.push({
+      text: `Perform an exhaustive consumer-advocacy audit evaluating every clause and numbered section in the following agreement:\n\n${contractText}`,
+    });
+  }
+
+  const requestBody = {
+    systemInstruction: {
+      parts: [{ text: AUDIT_SYSTEM_PROMPT }],
+    },
+    contents: [
+      {
+        role: "user",
+        parts,
+      },
+    ],
+    generationConfig: {
+      temperature: 0.1,
+      responseMimeType: "application/json",
+    },
+  };
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(requestBody),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    const message = errorData?.error?.message || `Google API returned HTTP ${response.status}`;
+    throw new Error(message);
+  }
+
+  const data = await response.json();
+  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!rawText) {
+    throw new Error("No content generated by Gemini.");
+  }
+
+  const cleanedJsonText = rawText
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  const parsed = JSON.parse(cleanedJsonText);
+
+  // Ensure clauses have valid IDs
+  const clauses: AnalyzedClause[] = (parsed.clauses || []).map((c: any, idx: number) => ({
+    id: c.id || `c-${idx + 1}`,
+    sectionTitle: c.sectionTitle || `Clause ${idx + 1}`,
+    severity: c.severity || "warning",
+    category: c.category || "Financial Liability",
+    exactQuote: c.exactQuote || "",
+    plainEnglishSummary: c.plainEnglishSummary || "",
+    worstCaseScenario: c.worstCaseScenario || "",
+    legalContextNote: c.legalContextNote || "",
+    proposedAmendment: c.proposedAmendment || "",
+  }));
+
+  const partialAudit: any = {
+    contractTitle: parsed.contractTitle || "Analyzed Agreement",
+    documentType: parsed.documentType || "lease",
+    overallScore: 100,
+    gradeLabel: "Proceed with Caution",
+    summary: parsed.summary || "AI contract audit completed.",
+    advertisedBasePriceDisplay: parsed.advertisedBasePriceDisplay || "$1,200/mo",
+    financialItems: parsed.financialItems || [],
+    clauses,
+    missingProtections: parsed.missingProtections || [],
+    engineUsed: `gemini-direct (${model})`,
+  };
+
+  // Compute mathematically consistent metrics
+  const metrics = calculateRiskMetrics(partialAudit);
+  partialAudit.overallScore = metrics.overallScore;
+  partialAudit.gradeLabel = metrics.gradeLabel;
+  partialAudit.categoryBreakdown = metrics.categoryBreakdown;
+
+  return partialAudit as ContractAuditResult;
+}
+
+/**
+ * Generates counter-offer negotiation email and formal rider directly from the browser via Gemini.
+ */
+export async function callGeminiNegotiateDirectly(options: {
+  apiKey: string;
+  contractTitle: string;
+  selectedClauses: AnalyzedClause[];
+  tone: NegotiationTone;
+  counterpartyName?: string;
+  userName?: string;
+}): Promise<{ emailSubject: string; emailBody: string; formalAddendumText: string }> {
+  const { apiKey, contractTitle, selectedClauses, tone, counterpartyName, userName } = options;
+  const cleanKey = apiKey.trim();
+
+  if (!cleanKey) {
+    throw new Error("No API key provided.");
+  }
+
+  const toneGuidance =
+    tone === "polite_student"
+      ? "Friendly, eager, respectful university student asking politely for balanced terms while emphasizing their excitement to sign."
+      : tone === "statutory_citation" || (tone as any) === "statutory_formal"
+      ? "Formal, authoritative legal perspective referencing tenant rights, bilateral fairness, and statutory standards."
+      : "Firm, direct, professional business professional negotiating standard commercial terms without hostility.";
+
+  const prompt = `Generate a high-converting counter-offer email and a formal contractual Addendum Schedule for the following contract and flagged issues:
+
+CONTRACT TITLE: ${contractTitle}
+DESIRED TONE: ${tone} (${toneGuidance})
+RECIPIENT: ${counterpartyName || "Property Manager / Organization"}
+SENDER: ${userName || "Prospective Signer / Student"}
+
+FLAGGED CLAUSES TO AMEND:
+${JSON.stringify(
+  selectedClauses.map((c) => ({
+    section: c.sectionTitle,
+    originalQuote: c.exactQuote,
+    studentSummary: c.plainEnglishSummary,
+    proposedReplacement: c.proposedAmendment,
+  })),
+  null,
+  2
+)}
+
+REQUIREMENTS:
+1. 'emailSubject': Engaging, professional subject line.
+2. 'emailBody': Complete ready-to-send email incorporating the concerns and proposed amendments naturally.
+   CRITICAL FORMATTING REQUIREMENT FOR 'emailBody':
+   - You MUST separate paragraphs using double newlines ("\\n\\n").
+   - The salutation (e.g. "Dear [Recipient],") MUST be on its own line followed by double newlines ("\\n\\n").
+   - Break the message into 2-3 readable, concise paragraphs separated by double newlines ("\\n\\n").
+   - The closing sign-off and sender name MUST be on separate lines at the end.
+3. 'formalAddendumText': A binding 1-page Rider / Addendum Schedule with signature lines that supersedes the original problematic clauses.
+
+You MUST return ONLY valid JSON:
+{
+  "emailSubject": "string",
+  "emailBody": "string",
+  "formalAddendumText": "string"
+}`;
+
+  const model = await resolveBrowserGeminiModel(cleanKey);
+  const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
+
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.2,
+        responseMimeType: "application/json",
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData?.error?.message || `HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!rawText) {
+    throw new Error("No counter-offer generated.");
+  }
+
+  const cleaned = rawText
+    .replace(/^```json\s*/i, "")
+    .replace(/^```\s*/i, "")
+    .replace(/\s*```$/i, "")
+    .trim();
+
+  return JSON.parse(cleaned);
+}
+```
+
+---
+
+<a id="file-11-src-lib-flash-ts"></a>
+### File 11: `src/lib/flash.ts`
 
 > **Purpose:** AI model configuration and prompt parameters  
 > **Path:** `src/lib/flash.ts`  
@@ -1048,8 +1420,8 @@ export function flashMark(clauseId: string) {
 
 ---
 
-<a id="file-11-src-lib-heuristic-analyzer-ts"></a>
-### File 11: `src/lib/heuristic-analyzer.ts`
+<a id="file-12-src-lib-heuristic-analyzer-ts"></a>
+### File 12: `src/lib/heuristic-analyzer.ts`
 
 > **Purpose:** Complete client-side zero-latency deterministic heuristic contract analysis engine  
 > **Path:** `src/lib/heuristic-analyzer.ts`  
@@ -2497,8 +2869,8 @@ export function analyzeCustomTextHeuristically(rawText: string): ContractAuditRe
 
 ---
 
-<a id="file-12-src-lib-negotiation-generator-ts"></a>
-### File 12: `src/lib/negotiation-generator.ts`
+<a id="file-13-src-lib-negotiation-generator-ts"></a>
+### File 13: `src/lib/negotiation-generator.ts`
 
 > **Purpose:** Deterministic multi-tone counter-offer and legal redline generator  
 > **Path:** `src/lib/negotiation-generator.ts`  
@@ -2591,8 +2963,8 @@ LANDLORD / COUNTERPARTY: _____________     DATE: ______________`;
 
 ---
 
-<a id="file-13-src-lib-sample-contracts-ts"></a>
-### File 13: `src/lib/sample-contracts.ts`
+<a id="file-14-src-lib-sample-contracts-ts"></a>
+### File 14: `src/lib/sample-contracts.ts`
 
 > **Purpose:** Real-world predatory student contract presets (sublease, employment, gym, NDA)  
 > **Path:** `src/lib/sample-contracts.ts`  
@@ -3302,8 +3674,8 @@ export function getDefaultSampleContract(): SampleContractPreset {
 
 ---
 
-<a id="file-14-src-lib-utils-ts"></a>
-### File 14: `src/lib/utils.ts`
+<a id="file-15-src-lib-utils-ts"></a>
+### File 15: `src/lib/utils.ts`
 
 > **Purpose:** General utility helper functions  
 > **Path:** `src/lib/utils.ts`  
@@ -3322,8 +3694,8 @@ export function cn(...inputs: ClassValue[]): string {
 
 ---
 
-<a id="file-15-src-store-use-audit-store-ts"></a>
-### File 15: `src/store/use-audit-store.ts`
+<a id="file-16-src-store-use-audit-store-ts"></a>
+### File 16: `src/store/use-audit-store.ts`
 
 > **Purpose:** Zustand global reactive store managing audit state, contract text, and active highlights  
 > **Path:** `src/store/use-audit-store.ts`  
@@ -3604,8 +3976,8 @@ export const useAuditStore = create<AuditState>()(
 
 ---
 
-<a id="file-16-src-app-globals-css"></a>
-### File 16: `src/app/globals.css`
+<a id="file-17-src-app-globals-css"></a>
+### File 17: `src/app/globals.css`
 
 > **Purpose:** Global CSS styles, glassmorphism design tokens, and smooth scroll utilities  
 > **Path:** `src/app/globals.css`  
@@ -3884,8 +4256,8 @@ export const useAuditStore = create<AuditState>()(
 
 ---
 
-<a id="file-17-src-app-layout-tsx"></a>
-### File 17: `src/app/layout.tsx`
+<a id="file-18-src-app-layout-tsx"></a>
+### File 18: `src/app/layout.tsx`
 
 > **Purpose:** Root layout metadata, Inter font imports, and notification container  
 > **Path:** `src/app/layout.tsx`  
@@ -3975,8 +4347,8 @@ export default function RootLayout({
 
 ---
 
-<a id="file-18-src-app-page-tsx"></a>
-### File 18: `src/app/page.tsx`
+<a id="file-19-src-app-page-tsx"></a>
+### File 19: `src/app/page.tsx`
 
 > **Purpose:** Main landing page featuring hero section, interactive demo, and feature grid  
 > **Path:** `src/app/page.tsx`  
@@ -4270,8 +4642,8 @@ export default function HomePage() {
 
 ---
 
-<a id="file-19-src-app-api-analyze-route-ts"></a>
-### File 19: `src/app/api/analyze/route.ts`
+<a id="file-20-src-app-api-analyze-route-ts"></a>
+### File 20: `src/app/api/analyze/route.ts`
 
 > **Purpose:** Backend Next.js API route for Gemini 1.5 Flash contract auditing  
 > **Path:** `src/app/api/analyze/route.ts`  
@@ -4455,8 +4827,8 @@ CRITICAL INSTRUCTIONS FOR EXHAUSTIVE CLAUSE COVERAGE:
 
 ---
 
-<a id="file-20-src-app-api-negotiate-route-ts"></a>
-### File 20: `src/app/api/negotiate/route.ts`
+<a id="file-21-src-app-api-negotiate-route-ts"></a>
+### File 21: `src/app/api/negotiate/route.ts`
 
 > **Purpose:** Backend Next.js API route for AI counter-offer generation  
 > **Path:** `src/app/api/negotiate/route.ts`  
@@ -4614,8 +4986,8 @@ REQUIREMENTS:
 
 ---
 
-<a id="file-21-src-app-api-test-key-route-ts"></a>
-### File 21: `src/app/api/test-key/route.ts`
+<a id="file-22-src-app-api-test-key-route-ts"></a>
+### File 22: `src/app/api/test-key/route.ts`
 
 > **Purpose:** API route for verifying user-provided Gemini API keys  
 > **Path:** `src/app/api/test-key/route.ts`  
@@ -4674,8 +5046,8 @@ export async function POST(req: NextRequest) {
 
 ---
 
-<a id="file-22-src-components-navbar-tsx"></a>
-### File 22: `src/components/navbar.tsx`
+<a id="file-23-src-components-navbar-tsx"></a>
+### File 23: `src/components/navbar.tsx`
 
 > **Purpose:** Top navigation bar with BYOK API key manager and live deployment links  
 > **Path:** `src/components/navbar.tsx`  
@@ -4706,6 +5078,7 @@ import {
 } from "lucide-react";
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
+import { testGeminiKeyDirectly } from "../lib/gemini-browser";
 
 export function Navbar({
   onOpenUpload,
@@ -4816,13 +5189,26 @@ export function Navbar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ apiKey: keyToTest }),
       });
-      const data = await res.json();
-      if (res.ok && data.ok) {
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          setTestStatus("success");
+          setTestMessage(data.message || "Connection verified! Ready for live AI audits.");
+          return;
+        }
+      }
+    } catch {
+      // Server API route not available (e.g. static export on GitHub Pages)
+    }
+
+    try {
+      const directResult = await testGeminiKeyDirectly(keyToTest);
+      if (directResult.ok) {
         setTestStatus("success");
-        setTestMessage(data.message || "Connection verified! Ready for live AI audits.");
+        setTestMessage(directResult.message);
       } else {
         setTestStatus("error");
-        setTestMessage(data.error || "Failed to verify key with Google Gemini API.");
+        setTestMessage(directResult.message);
       }
     } catch (err: any) {
       setTestStatus("error");
@@ -5207,8 +5593,8 @@ export function Navbar({
 
 ---
 
-<a id="file-23-src-components-upload-zone-tsx"></a>
-### File 23: `src/components/upload-zone.tsx`
+<a id="file-24-src-components-upload-zone-tsx"></a>
+### File 24: `src/components/upload-zone.tsx`
 
 > **Purpose:** Contract upload interface with file dropzone, text input, and quick presets  
 > **Path:** `src/components/upload-zone.tsx`  
@@ -5230,6 +5616,7 @@ import {
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
 import { analyzeCustomTextHeuristically } from "../lib/heuristic-analyzer";
+import { callGeminiAuditDirectly } from "../lib/gemini-browser";
 
 const PRESET_STYLE: Record<string, { icon: typeof Home; tile: string; tag: string }> = {
   "slumlord-lease": { icon: Home, tile: "from-rose-500 to-orange-400", tag: "Off-campus lease" },
@@ -5370,35 +5757,55 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
       if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
       onAuditComplete?.();
     } catch (err: any) {
-      console.warn("Analysis error, using heuristic or preset fallback:", err);
+      console.warn("Server API analyze unavailable, attempting client direct or fallback:", err);
 
       if (payload.presetId) {
         await sleep(500);
         loadPreset(payload.presetId);
         if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         onAuditComplete?.();
-      } else if (payload.contractText) {
+        return;
+      }
+
+      // If user provided a Gemini API key, execute client-direct Google Gemini REST call
+      if (userApiKey) {
+        try {
+          setActiveEngineDisplay("Google Gemini (Client Direct)");
+          const directAudit = await callGeminiAuditDirectly({
+            apiKey: userApiKey,
+            contractText: payload.contractText,
+            fileBase64: payload.fileBase64,
+            mimeType: payload.mimeType,
+          });
+
+          setAnalysisNotice(null);
+          if (payload.contractText) setRawText(payload.contractText);
+          setAuditResult(directAudit);
+          if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+          onAuditComplete?.();
+          return;
+        } catch (directAiErr: any) {
+          console.warn("Direct browser Gemini call encountered error, falling back to heuristic engine:", directAiErr);
+        }
+      }
+
+      if (payload.contractText) {
         const fallbackAudit = analyzeCustomTextHeuristically(payload.contractText);
-        const name = err?.name;
-        const msg = String(err?.message || "");
-        const notice =
-          name === "AbortError"
-            ? "Google AI took too long to respond. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
-            : name === "TypeError" || msg.includes("Failed to fetch") || msg.includes("NetworkError")
-            ? "Local server connection interrupted. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
-            : "Google AI service unavailable or rate limit reached. Seamlessly analyzed with ClauseClear Local Heuristic Engine.";
+        const notice = userApiKey
+          ? "Google Gemini API reached a rate limit or network issue. Seamlessly analyzed with ClauseClear Local Heuristic Engine."
+          : "Static export mode active. Seamlessly analyzed with ClauseClear Local Heuristic Engine.";
 
         fallbackAudit.quotaNotice = notice;
         setAnalysisNotice(notice);
         setActiveEngineDisplay("Local Heuristic Engine (Fallback Active)");
-        await sleep(2500);
+        await sleep(1500);
         setRawText(payload.contractText);
         setAuditResult(fallbackAudit);
         if (typeof window !== "undefined") window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         onAuditComplete?.();
       } else {
         setAnalysisError(
-          "We could not analyze that file right now. Try again, or paste the contract text instead."
+          "To audit PDF or image files on the static site, please enter your free Google Gemini API key via the Key icon in the top right, or copy and paste the text into the Paste tab."
         );
       }
     } finally {
@@ -5642,8 +6049,8 @@ export function UploadZone({ onAuditComplete }: { onAuditComplete?: () => void }
 
 ---
 
-<a id="file-24-src-components-audit-loading-modal-tsx"></a>
-### File 24: `src/components/audit-loading-modal.tsx`
+<a id="file-25-src-components-audit-loading-modal-tsx"></a>
+### File 25: `src/components/audit-loading-modal.tsx`
 
 > **Purpose:** Multi-step animated audit progress modal with real-time step status  
 > **Path:** `src/components/audit-loading-modal.tsx`  
@@ -6001,8 +6408,8 @@ export function AuditLoadingModal({
 
 ---
 
-<a id="file-25-src-components-ui-count-up-tsx"></a>
-### File 25: `src/components/ui/count-up.tsx`
+<a id="file-26-src-components-ui-count-up-tsx"></a>
+### File 26: `src/components/ui/count-up.tsx`
 
 > **Purpose:** Animated numeric count-up component for financial metrics and scores  
 > **Path:** `src/components/ui/count-up.tsx`  
@@ -6060,8 +6467,8 @@ export function CountUp({
 
 ---
 
-<a id="file-26-src-components-dashboard-audit-workspace-tsx"></a>
-### File 26: `src/components/dashboard/audit-workspace.tsx`
+<a id="file-27-src-components-dashboard-audit-workspace-tsx"></a>
+### File 27: `src/components/dashboard/audit-workspace.tsx`
 
 > **Purpose:** Main split-pane auditing workspace orchestrating feed and document viewer  
 > **Path:** `src/components/dashboard/audit-workspace.tsx`  
@@ -6175,8 +6582,8 @@ export function AuditWorkspace({ onBackToUpload }: { onBackToUpload?: () => void
 
 ---
 
-<a id="file-27-src-components-dashboard-score-header-tsx"></a>
-### File 27: `src/components/dashboard/score-header.tsx`
+<a id="file-28-src-components-dashboard-score-header-tsx"></a>
+### File 28: `src/components/dashboard/score-header.tsx`
 
 > **Purpose:** Audit score banner with circular SVG gauge, risk level, and cost summary  
 > **Path:** `src/components/dashboard/score-header.tsx`  
@@ -6444,8 +6851,8 @@ export function ScoreHeader() {
 
 ---
 
-<a id="file-28-src-components-dashboard-clause-feed-tsx"></a>
-### File 28: `src/components/dashboard/clause-feed.tsx`
+<a id="file-29-src-components-dashboard-clause-feed-tsx"></a>
+### File 29: `src/components/dashboard/clause-feed.tsx`
 
 > **Purpose:** Categorized list of flagged predatory clauses with severity tags and explanations  
 > **Path:** `src/components/dashboard/clause-feed.tsx`  
@@ -6794,8 +7201,8 @@ export function ClauseFeed() {
 
 ---
 
-<a id="file-29-src-components-dashboard-document-viewer-tsx"></a>
-### File 29: `src/components/dashboard/document-viewer.tsx`
+<a id="file-30-src-components-dashboard-document-viewer-tsx"></a>
+### File 30: `src/components/dashboard/document-viewer.tsx`
 
 > **Purpose:** Synchronized legal text viewer with color-coded highlights and jump-to-clause  
 > **Path:** `src/components/dashboard/document-viewer.tsx`  
@@ -7020,8 +7427,8 @@ export function DocumentViewer() {
 
 ---
 
-<a id="file-30-src-components-dashboard-true-cost-sim-tsx"></a>
-### File 30: `src/components/dashboard/true-cost-sim.tsx`
+<a id="file-31-src-components-dashboard-true-cost-sim-tsx"></a>
+### File 31: `src/components/dashboard/true-cost-sim.tsx`
 
 > **Purpose:** Interactive financial simulator tallying hidden fees, deposits, and true costs  
 > **Path:** `src/components/dashboard/true-cost-sim.tsx`  
@@ -7349,8 +7756,8 @@ export function TrueCostSimulator() {
 
 ---
 
-<a id="file-31-src-components-dashboard-negotiation-drawer-tsx"></a>
-### File 31: `src/components/dashboard/negotiation-drawer.tsx`
+<a id="file-32-src-components-dashboard-negotiation-drawer-tsx"></a>
+### File 32: `src/components/dashboard/negotiation-drawer.tsx`
 
 > **Purpose:** Sliding negotiation drawer with 3-tone counter-offer drafter and redline rider  
 > **Path:** `src/components/dashboard/negotiation-drawer.tsx`  
@@ -7374,6 +7781,7 @@ import {
 import { useAuditStore } from "../../store/use-audit-store";
 import { NegotiationTone } from "../../lib/schema";
 import { generateDeterministicNegotiation } from "../../lib/negotiation-generator";
+import { callGeminiNegotiateDirectly } from "../../lib/gemini-browser";
 
 const TONES: { id: NegotiationTone; title: string; badge: string; blurb: string }[] = [
   {
@@ -7498,7 +7906,28 @@ export function NegotiationDrawer() {
         data = await res.json();
       }
     } catch (err) {
-      console.warn("API negotiate unavailable, using client generator:", err);
+      console.warn("Server API negotiate unavailable, attempting client direct or template fallback:", err);
+    }
+
+    // If server API was unavailable and user has API key, generate via direct browser Gemini REST call
+    const userApiKey =
+      typeof window !== "undefined"
+        ? localStorage.getItem("clauseclear_gemini_key") || undefined
+        : undefined;
+
+    if (!data && userApiKey) {
+      try {
+        data = await callGeminiNegotiateDirectly({
+          apiKey: userApiKey,
+          contractTitle: contractTitle || auditResult?.contractTitle || "Agreement",
+          selectedClauses,
+          tone: toneToUse,
+          counterpartyName,
+          userName,
+        });
+      } catch (directAiErr) {
+        console.warn("Direct browser Gemini negotiate encountered error, using template:", directAiErr);
+      }
     }
 
     if (!data) {

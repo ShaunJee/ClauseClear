@@ -16,6 +16,7 @@ import {
 import { useAuditStore } from "../../store/use-audit-store";
 import { NegotiationTone } from "../../lib/schema";
 import { generateDeterministicNegotiation } from "../../lib/negotiation-generator";
+import { callGeminiNegotiateDirectly } from "../../lib/gemini-browser";
 
 const TONES: { id: NegotiationTone; title: string; badge: string; blurb: string }[] = [
   {
@@ -140,7 +141,28 @@ export function NegotiationDrawer() {
         data = await res.json();
       }
     } catch (err) {
-      console.warn("API negotiate unavailable, using client generator:", err);
+      console.warn("Server API negotiate unavailable, attempting client direct or template fallback:", err);
+    }
+
+    // If server API was unavailable and user has API key, generate via direct browser Gemini REST call
+    const userApiKey =
+      typeof window !== "undefined"
+        ? localStorage.getItem("clauseclear_gemini_key") || undefined
+        : undefined;
+
+    if (!data && userApiKey) {
+      try {
+        data = await callGeminiNegotiateDirectly({
+          apiKey: userApiKey,
+          contractTitle: contractTitle || auditResult?.contractTitle || "Agreement",
+          selectedClauses,
+          tone: toneToUse,
+          counterpartyName,
+          userName,
+        });
+      } catch (directAiErr) {
+        console.warn("Direct browser Gemini negotiate encountered error, using template:", directAiErr);
+      }
     }
 
     if (!data) {

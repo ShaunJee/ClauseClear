@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useAuditStore } from "../store/use-audit-store";
 import { SAMPLE_PRESET_LIST } from "../lib/sample-contracts";
+import { testGeminiKeyDirectly } from "../lib/gemini-browser";
 
 export function Navbar({
   onOpenUpload,
@@ -133,13 +134,26 @@ export function Navbar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ apiKey: keyToTest }),
       });
-      const data = await res.json();
-      if (res.ok && data.ok) {
+      if (res.ok) {
+        const data = await res.json();
+        if (data.ok) {
+          setTestStatus("success");
+          setTestMessage(data.message || "Connection verified! Ready for live AI audits.");
+          return;
+        }
+      }
+    } catch {
+      // Server API route not available (e.g. static export on GitHub Pages)
+    }
+
+    try {
+      const directResult = await testGeminiKeyDirectly(keyToTest);
+      if (directResult.ok) {
         setTestStatus("success");
-        setTestMessage(data.message || "Connection verified! Ready for live AI audits.");
+        setTestMessage(directResult.message);
       } else {
         setTestStatus("error");
-        setTestMessage(data.error || "Failed to verify key with Google Gemini API.");
+        setTestMessage(directResult.message);
       }
     } catch (err: any) {
       setTestStatus("error");
