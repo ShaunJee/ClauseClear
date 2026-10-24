@@ -2,38 +2,25 @@
 
 # 🛡️ ClauseClear
 
-### **The Open-Source AI Contract Auditing & Financial Transparency Engine for Students & First-Time Renters**
+### *“Read the fine print before it reads you.”*
 
-*“Read the fine print before it reads you.”*
-
-Built with passion for **NextSpark Hacks 2026** 🏆
-
----
-
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-shaunjee.github.io%2FClauseClear-8B5CF6?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
-[![Watch Demo Video](https://img.shields.io/badge/🎬_3--Min_Demo-Watch_1080p_MP4-E11D48?style=for-the-badge)](./ClauseClear_Demo.mp4)
-[![Hackathon](https://img.shields.io/badge/🏆_NextSpark_Hacks-2026_Entry-F59E0B?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
-[![Next.js 14](https://img.shields.io/badge/Next.js-14_Static_Export-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Strict_Type_Safe-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Google Gemini](https://img.shields.io/badge/Google_Gemini-3.5_Flash_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
-[![Offline Capable](https://img.shields.io/badge/Offline_NLP-25--Rule_Engine-10B981?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
-[![Privacy First](https://img.shields.io/badge/Privacy-100%25_In--Memory_Zero_Storage-14B8A6?style=for-the-badge)](https://shaunjee.github.io/ClauseClear/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-FACC15?style=for-the-badge&logo=opensourceinitiative&logoColor=black)](./LICENSE)
+**The AI contract auditing & financial transparency engine for students and first-time renters.**  
+Built for **NextSpark Hacks 2026** 🏆
 
 <br />
 
-**[🌐 Try the Live Website](https://shaunjee.github.io/ClauseClear/)** • **[🎬 Watch Demo Video](./ClauseClear_Demo.mp4)** • **[⚡ 1-Click Judge Presets](#-zero-setup-1-click-judge-presets)** • **[🏗️ Tri-Engine Architecture](#️-resilient-tri-engine-architecture)** • **[🚀 Quickstart](#-quickstart--local-development)**
+<a href="https://shaunjee.github.io/ClauseClear/"><img src="https://img.shields.io/badge/Live_Demo-shaunjee.github.io%2FClauseClear-6366f1?style=flat-square" alt="Live Demo" /></a>&nbsp;
+<a href="./ClauseClear_Demo.mp4"><img src="https://img.shields.io/badge/Demo_Video-3--Min_Walkthrough-f43f5e?style=flat-square" alt="Demo Video" /></a>&nbsp;
+<a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-10b981?style=flat-square" alt="License: MIT" /></a>
 
-<br />
+<br /><br />
 
 <!-- Hero Poster -->
 <a href="https://shaunjee.github.io/ClauseClear/">
-  <img src="Poster.png" alt="ClauseClear Poster Banner - Read the fine print before it reads you" width="100%" style="border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);" />
+  <img src="Poster.png" alt="ClauseClear - Read the fine print before it reads you" width="100%" style="border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,0.25);" />
 </a>
 
-<p align="center">
-  <em>👆 Click the poster above to test the live application directly in your browser with zero setup.</em>
-</p>
+<br />
 
 </div>
 
@@ -41,7 +28,7 @@ Built with passion for **NextSpark Hacks 2026** 🏆
 
 ## 🎬 3-Minute Demo Video Walkthrough
 
-Watch the complete, uncensored **3-minute walkthrough** demonstrating ClauseClear in action—from instant preset audit to bi-directional sync, True Cost financial simulation, and 1-click binding legal rider generation:
+Watch the complete **3-minute walkthrough** demonstrating ClauseClear in action—from instant preset audit to bi-directional sync, True Cost financial simulation, and 1-click binding legal rider generation:
 
 <div align="center">
 
@@ -70,10 +57,10 @@ Every semester, **millions of university students, young graduates, and first-ti
 ### Why Existing Solutions Fail
 
 | Solution | Cost | Speed | Privacy | Actionable Leverage |
-| :--- | :---: | :---: | :---: | :---: |
-| **Tenant Attorneys** | $300 – $500 / hr | 3–7 business days | High | High (but unaffordable for students) |
-| **Generic Chatbots (ChatGPT)** | Free / $20 / mo | ~15 seconds | ❌ Data used for training | ❌ Vague summaries, misses buried fee math, hallucinated citations |
-| **🛡️ ClauseClear** | **100% Free** | **Instant (< 1s)** | **🔒 100% In-Memory / Zero Data Retained** | **✅ Mathematical 0-100 Score, Exact Verbatim Highlights, Grocery Conversion & Binding Rider A** |
+| :--- | :---: | :---: | :---: | :--- |
+| **Tenant Attorneys** | $300 – $500 / hr | 3–7 days | High | High (but unaffordable for students) |
+| **Generic Chatbots (ChatGPT)** | Free / $20 / mo | ~15s | ❌ Data used for training | ❌ Vague summaries, misses buried fees, hallucinated terms |
+| **🛡️ ClauseClear** | **100% Free** | **Instant**<br/>(<1s) | **🔒 100% In-Memory / Zero Storage** | **✅ Mathematical 0-100 Score, Exact Verbatim Highlights, Grocery Conversion & Binding Rider A** |
 
 ---
 
@@ -142,16 +129,10 @@ flowchart TD
 
 Judges can test ClauseClear instantly on the **[Live Demo Website](https://shaunjee.github.io/ClauseClear/)** with three pre-loaded real-world contracts:
 
-```
-┌─────────────────────────────────┬─────────────────────────────────┬─────────────────────────────────┐
-│ 🏠 Oakwood Student Commons      │ 💼 NextGen Tech Contributor     │ 🏋️ Apex Fitness 24-Mo Club      │
-├─────────────────────────────────┼─────────────────────────────────┼─────────────────────────────────┤
-│ • Advertised: $950 / mo         │ • Unpaid 35-hr/week commitment  │ • Advertised: $39 / mo          │
-│ • Actual: $1,055 / mo           │ • Seizes personal hackathons    │ • $89 annual facility fee       │
-│ • 3:00 AM unannounced entry     │ • 2-year non-compete covenant   │ • 60-day certified mail cancel  │
-│ • Score: 5 / 100 (Predatory)    │ • Score: 18 / 100 (High Risk)   │ • Score: 32 / 100 (Burdensome)  │
-└─────────────────────────────────┴─────────────────────────────────┴─────────────────────────────────┘
-```
+| 🏠 Oakwood Student Commons<br>*(Residential Housing)* | 💼 NextGen Tech Contributor<br>*(Startup Internship)* | 🏋️ Apex Fitness 24-Mo Club<br>*(Gym Membership)* |
+| :--- | :--- | :--- |
+| • Advertised: **$950 / mo**<br>• Actual: **$1,055 / mo**<br>• 3:00 AM unannounced entry | • Unpaid 35-hr/week commitment<br>• Seizes personal hackathons<br>• 2-year non-compete covenant | • Advertised: **$39 / mo**<br>• $89 annual facility fee<br>• 60-day certified mail cancel |
+| 🔴 **Score: 5 / 100** *(Predatory)* | 🔴 **Score: 18 / 100** *(High Risk)* | 🟡 **Score: 32 / 100** *(Burdensome)* |
 
 ---
 
