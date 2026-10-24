@@ -129,10 +129,10 @@ flowchart TD
 
 Judges can test ClauseClear instantly on the **[Live Demo Website](https://shaunjee.github.io/ClauseClear/)** with three pre-loaded real-world contracts:
 
-| 🏠 Oakwood Student Commons<br>*(Residential Housing)* | 💼 NextGen Tech Contributor<br>*(Startup Internship)* | 🏋️ Apex Fitness 24-Mo Club<br>*(Gym Membership)* |
+| 🏠 Oakwood Student Commons Lease<br>*(Residential Lease)* | 💼 NextGen Startup Contributor Agreement<br>*(Internship / Employment)* | 🏋️ IronPeak Fitness Club Membership<br>*(Subscription / Gym)* |
 | :--- | :--- | :--- |
-| • Advertised: **$950 / mo**<br>• Actual: **$1,055 / mo**<br>• 3:00 AM unannounced entry | • Unpaid 35-hr/week commitment<br>• Seizes personal hackathons<br>• 2-year non-compete covenant | • Advertised: **$39 / mo**<br>• $89 annual facility fee<br>• 60-day certified mail cancel |
-| 🔴 **Score: 5 / 100** *(Predatory)* | 🔴 **Score: 18 / 100** *(High Risk)* | 🟡 **Score: 32 / 100** *(Burdensome)* |
+| • Advertised: **$950 / mo** → really **$1,055 / mo** (+$350 upfront)<br>• **$1,610** in total annual extra charges & junk fees<br>• Unannounced 3:00 AM landlord entry rights<br>• Aggressive 90-day certified mail renewal trap | • Unpaid **35-hr / week** mandatory commitment<br>• Full seizure of student capstone & personal code IP<br>• Enforces illegal 2-year non-compete covenant<br>• Broad indemnification & zero worker protections | • Advertised: **$29.99 / mo** → really **$39.98 / mo** (+$148 upfront)<br>• **$267.88** in total annual extra charges & fees<br>• Notarized in-person cancel (1st Tuesday only)<br>• Shields gym from defective equipment negligence |
+| 🔴 **Score: 5 / 100** *(Predatory / High Risk)*<br>🚩 4 Red flags • ⚠️ 4 Warnings • 🟢 1 Safe | 🔴 **Score: 18 / 100** *(Predatory / High Risk)*<br>🚩 3 Red flags • ⚠️ 2 Warnings • 🟢 1 Safe | 🔴 **Score: 36 / 100** *(Predatory / High Risk)*<br>🚩 2 Red flags • ⚠️ 2 Warnings • 🟢 1 Safe |
 
 ---
 
