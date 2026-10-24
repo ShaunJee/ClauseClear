@@ -428,7 +428,18 @@ export function Navbar({
               <div className="relative">
                 <input
                   id="gemini-key-input"
-                  type={showKey ? "text" : "password"}
+                  name="gemini_api_key_token"
+                  type="text"
+                  autoComplete="off"
+                  autoCorrect="off"
+                  autoCapitalize="off"
+                  spellCheck={false}
+                  data-lpignore="true"
+                  data-form-type="other"
+                  data-1p-ignore="true"
+                  style={{
+                    WebkitTextSecurity: showKey ? "none" : "disc",
+                  } as React.CSSProperties}
                   placeholder="AIzaSy..."
                   value={apiKeyInput}
                   onChange={(e) => {
