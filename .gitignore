@@ -1,0 +1,42 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Next.js Build Output
+/.next/
+out/
+
+# Hackathon Starter Instructions Folder (Excluded as requested)
+start/
+
+# Temporary and Debug Documentation Bundles
+CLAUSECLEAR_AUDIT_DEBUG_BUNDLE.md
+CLAUSECLEAR_UI_BUNDLE.md
+normalize-html.py
+
+# Environment Variables and Credentials
+.env
+.env*.local
+!.env.example
+
+# Logs and Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Vercel and Deployment
+.vercel
+
+# Operating System Files
+.DS_Store
+*.pem
+Thumbs.db
+
+# IDE and Editor Directories
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
