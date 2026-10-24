@@ -9,7 +9,7 @@ Built for **NextSpark Hacks 2026** 🏆
 
 <br />
 
-<a href="https://shaunjee.github.io/ClauseClear/"><img src="https://img.shields.io/badge/Live_Demo-shaunjee.github.io%2FClauseClear-6366f1?style=flat-square" alt="Live Demo" /></a>&nbsp;
+<a href="https://shaunjee.github.io/ClauseClear/"><img src="https://img.shields.io/badge/Demo_Website-shaunjee.github.io%2FClauseClear-6366f1?style=flat-square" alt="Demo Website" /></a>&nbsp;
 <a href="./ClauseClear_Demo.mp4"><img src="https://img.shields.io/badge/Demo_Video-3--Min_Walkthrough-f43f5e?style=flat-square" alt="Demo Video" /></a>&nbsp;
 <a href="./LICENSE"><img src="https://img.shields.io/badge/License-MIT-10b981?style=flat-square" alt="License: MIT" /></a>
 
@@ -19,6 +19,12 @@ Built for **NextSpark Hacks 2026** 🏆
 <a href="https://shaunjee.github.io/ClauseClear/">
   <img src="Poster.png" alt="ClauseClear - Read the fine print before it reads you" width="100%" style="border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,0.25);" />
 </a>
+
+<p align="center">
+  🌐 <strong>Demo Website:</strong> <a href="https://shaunjee.github.io/ClauseClear/"><strong>https://shaunjee.github.io/ClauseClear/</strong></a>
+  <br />
+  <em>👆 Click the link or poster above to launch the live demo website with zero setup!</em>
+</p>
 
 <br />
 
