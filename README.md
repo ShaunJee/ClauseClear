@@ -90,7 +90,7 @@ ClauseClear/
 │   │       ├── analyze/route.ts         # Server-side Gemini contract auditing endpoint
 │   │       └── negotiate/route.ts       # Server-side counter-offer drafting endpoint
 │   ├── components/
-│   │   ├── upload-zone.tsx              # Contract drop zone, preset loader, and text input
+│   │   ├── upload-zone.tsx              # Contract text input, preset loader, and audit engine
 │   │   ├── audit-loading-modal.tsx      # Multi-step progress modal with live elapsed timer
 │   │   ├── api-key-modal.tsx            # In-browser Gemini API key configuration
 │   │   └── dashboard/

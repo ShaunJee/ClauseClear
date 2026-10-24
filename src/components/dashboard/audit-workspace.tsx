@@ -39,8 +39,8 @@ export function AuditWorkspace({ onBackToUpload }: { onBackToUpload?: () => void
             {onBackToUpload && (
               <button
                 onClick={onBackToUpload}
-                aria-label="Back to upload"
-                title="Back to upload"
+                aria-label="Back to contract input"
+                title="Back to contract input"
                 className="grid h-9 w-9 place-items-center rounded-lg text-slate-500 transition hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-white/10 dark:hover:text-white"
               >
                 <ArrowLeft className="h-4 w-4" />

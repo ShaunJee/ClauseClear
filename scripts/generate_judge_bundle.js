@@ -27,7 +27,7 @@ const filesToInclude = [
   { path: 'src/app/api/negotiate/route.ts', lang: 'typescript', desc: 'Backend Next.js API route for AI counter-offer generation' },
   { path: 'src/app/api/test-key/route.ts', lang: 'typescript', desc: 'API route for verifying user-provided Gemini API keys' },
   { path: 'src/components/navbar.tsx', lang: 'tsx', desc: 'Top navigation bar with BYOK API key manager and live deployment links' },
-  { path: 'src/components/upload-zone.tsx', lang: 'tsx', desc: 'Contract upload interface with file dropzone, text input, and quick presets' },
+  { path: 'src/components/upload-zone.tsx', lang: 'tsx', desc: 'Contract auditing interface with instant presets, text input, and live AI/offline analysis' },
   { path: 'src/components/audit-loading-modal.tsx', lang: 'tsx', desc: 'Multi-step animated audit progress modal with real-time step status' },
   { path: 'src/components/ui/count-up.tsx', lang: 'tsx', desc: 'Animated numeric count-up component for financial metrics and scores' },
   { path: 'src/components/dashboard/audit-workspace.tsx', lang: 'tsx', desc: 'Main split-pane auditing workspace orchestrating feed and document viewer' },
@@ -106,7 +106,7 @@ University students routinely sign legally binding contracts without understandi
   - *Legal / Formal:* Cites statutory rights and standard contract doctrine.
 - **Resilient Tri-Engine Architecture:**
   - *Cloud AI (Server-Side):* App Router API routes (\`/api/analyze\`, \`/api/negotiate\`) with \`@ai-sdk/google\` for full-stack environments.
-  - *Cloud AI (Client-Direct Browser):* Native browser-to-Gemini REST integration (\`src/lib/gemini-browser.ts\`) with CORS support, enabling live BYOK AI audits and multimodal PDF uploads on static hosts like GitHub Pages with zero server backend.
+  - *Cloud AI (Client-Direct Browser):* Native browser-to-Gemini REST integration (\`src/lib/gemini-browser.ts\`) with CORS support, enabling live BYOK AI audits on static hosts like GitHub Pages with zero server backend.
   - *Offline Deterministic Heuristic Engine:* In-memory 25-rule NLP extractor (\`src/lib/heuristic-analyzer.ts\`) guaranteeing instant zero-latency audits even with zero API key or during network disruptions.
 
 ---

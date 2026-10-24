@@ -240,44 +240,30 @@ You MUST return ONLY valid JSON matching this schema:
 
 /**
  * Executes a full contract audit directly from the client browser via Google Gemini REST API.
- * Supports both raw text analysis and multimodal PDF/image analysis.
  */
 export async function callGeminiAuditDirectly(options: {
   apiKey: string;
   preferredModel?: string;
-  contractText?: string;
-  fileBase64?: string;
-  mimeType?: string;
+  contractText: string;
 }): Promise<ContractAuditResult> {
-  const { apiKey, preferredModel, contractText, fileBase64, mimeType } = options;
+  const { apiKey, preferredModel, contractText } = options;
   const cleanKey = apiKey.trim();
 
   if (!cleanKey) {
     throw new Error("No Gemini API key provided.");
   }
-  if (!contractText && !fileBase64) {
-    throw new Error("No contract text or document file provided.");
+  if (!contractText || !contractText.trim()) {
+    throw new Error("No contract text provided.");
   }
 
   const model = await resolveBrowserGeminiModel(cleanKey, preferredModel);
   const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cleanKey}`;
 
-  const parts: any[] = [];
-  if (fileBase64) {
-    parts.push({
-      text: "Perform an exhaustive consumer-advocacy audit covering every clause and numbered section in this contract document.",
-    });
-    parts.push({
-      inlineData: {
-        mimeType: mimeType || "application/pdf",
-        data: fileBase64,
-      },
-    });
-  } else {
-    parts.push({
+  const parts = [
+    {
       text: `Perform an exhaustive consumer-advocacy audit evaluating every clause and numbered section in the following agreement:\n\n${contractText}`,
-    });
-  }
+    },
+  ];
 
   const requestBody = {
     systemInstruction: {

@@ -106,8 +106,8 @@ function HeroPreview() {
 const STEPS = [
   {
     icon: FileSearch,
-    title: "Drop in your contract",
-    body: "Paste text, upload a PDF, or try a sample. Nothing is stored.",
+    title: "Input your contract",
+    body: "Paste text or choose a realistic preset. Nothing is stored.",
   },
   {
     icon: AlertTriangle,

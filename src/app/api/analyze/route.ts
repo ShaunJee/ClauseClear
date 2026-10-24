@@ -14,7 +14,7 @@ export const maxDuration = 60;
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json().catch(() => ({}));
-    const { contractText, fileBase64, mimeType, presetId, userApiKey, preferredModel } = body;
+    const { contractText, presetId, userApiKey, preferredModel } = body;
 
     const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -47,10 +47,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(getDefaultSampleContract().auditResult);
     }
 
-    // 3. Live AI Analysis with Gemini 1.5 Flash
-    if (!contractText && !fileBase64) {
+    // 3. Live AI Analysis with Gemini
+    if (!contractText || !contractText.trim()) {
       return NextResponse.json(
-        { error: "No contract text or document file was provided." },
+        { error: "No contract text was provided." },
         { status: 400 }
       );
     }
@@ -73,24 +73,7 @@ CRITICAL INSTRUCTIONS FOR EXHAUSTIVE CLAUSE COVERAGE:
     const messages: any[] = [
       {
         role: "user",
-        content: fileBase64
-          ? [
-              {
-                type: "text",
-                text: "Perform an exhaustive consumer-advocacy audit covering every clause and numbered section in this contract document.",
-              },
-              {
-                type: "file",
-                data: fileBase64,
-                mimeType: mimeType || "application/pdf",
-              },
-            ]
-          : [
-              {
-                type: "text",
-                text: `Perform an exhaustive consumer-advocacy audit evaluating every clause and numbered section in the following agreement:\n\n${contractText}`,
-              },
-            ],
+        content: `Perform an exhaustive consumer-advocacy audit evaluating every clause and numbered section in the following agreement:\n\n${contractText}`,
       },
     ];
 
